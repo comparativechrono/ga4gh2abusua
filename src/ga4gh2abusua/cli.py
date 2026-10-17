@@ -1,22 +1,9 @@
-"""
-Command-line interface for ga4gh2abusua.
+"""Command line: ga4gh2abusua FILE [-o SESSION.json]
 
-Reconstruct an Abusua Pedigree Studio session (.json) from a GA4GH Pedigree
-Standard message and/or a Phenopackets v2 Family.
-
-Examples
---------
-From both inputs (most complete)::
-
-    ga4gh2abusua --family fam.family.json --pedigree fam.ga4gh-pedigree.json -o fam.json
-
-From a Family alone::
-
-    ga4gh2abusua --family fam.family.json -o fam.json
-
-From a GA4GH Pedigree alone, printing to stdout::
-
-    ga4gh2abusua --pedigree fam.ga4gh-pedigree.json --stdout
+FILE is a GA4GH Pedigree or a Phenopackets Family. The options of version
+0.3, ``--pedigree FILE`` and ``--family FILE``, still work, and can be given
+together: the GA4GH Pedigree is then read first and the Family fills in what
+it lacks.
 """
 from __future__ import annotations
 
@@ -26,76 +13,103 @@ import pathlib
 import sys
 from typing import List, Optional
 
-from .convert import to_abusua_session
+from pedigree_ga4gh import detect
+from pedigree_ga4gh.io import load
+
+from . import __version__
+from .convert import LegacyFileError, to_abusua_session
+
+_SUFFIXES = (".ga4gh-pedigree.json", "_ga4gh-pedigree.json", ".family.json", "_phenopackets-family.json",
+             ".pedigree.json", ".json")
 
 
-def _load(path: Optional[str]) -> Optional[dict]:
-    if not path:
-        return None
-    return json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+def default_output(source: str) -> pathlib.Path:
+    """``asante.ga4gh-pedigree.json`` -> ``asante.json``, in the current folder, as in version 0.3."""
+    name = pathlib.Path(source).name
+    for suffix in _SUFFIXES:
+        if name.endswith(suffix) and len(name) > len(suffix):
+            name = name[: -len(suffix)]
+            break
+    return pathlib.Path(name + ".json")
 
 
-def _emit_warnings(warns: List[str], stream=sys.stderr) -> None:
-    if warns:
-        print(f"[notes] {len(warns)}:", file=stream)
-        for w in warns:
-            print(f"  - {w}", file=stream)
+def _emit(notes: List[str]) -> None:
+    if notes:
+        print("[notes] {}:".format(len(notes)), file=sys.stderr)
+        for n in notes:
+            print("  - {}".format(n), file=sys.stderr)
 
 
-def main(argv: "list[str] | None" = None) -> int:
+def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(
         prog="ga4gh2abusua",
-        description="Reconstruct an Abusua session from a GA4GH Pedigree and/or Phenopackets Family.")
-    ap.add_argument("--family", help="Path to a Phenopackets v2 Family JSON file")
-    ap.add_argument("--pedigree", help="Path to a GA4GH Pedigree Standard JSON file")
-    ap.add_argument("-o", "--out", help="Output path for the Abusua .json session")
-    ap.add_argument("--stdout", action="store_true",
-                    help="Print the session to stdout instead of writing a file")
-    ap.add_argument("--family-id", default=None,
-                    help="Override the family id used in the session")
+        description="Rebuild an Abusua Pedigree Studio session from a GA4GH Pedigree or a Phenopackets Family.")
+    ap.add_argument("input", nargs="?", help="a GA4GH Pedigree or a Phenopackets Family (.json)")
+    ap.add_argument("--pedigree", help="a GA4GH Pedigree (version 0.3's option)")
+    ap.add_argument("--family", help="a Phenopackets Family (version 0.3's option)")
+    ap.add_argument("-o", "--out", help="the session to write (default: the input's name, in the current folder)")
+    ap.add_argument("--stdout", action="store_true", help="print the session instead of writing a file")
+    ap.add_argument("--family-id", default=None, help="the family id to give the session")
     ap.add_argument("--indent", type=int, default=2, help="JSON indent (default: 2)")
+    ap.add_argument("--version", action="version", version="ga4gh2abusua " + __version__)
     args = ap.parse_args(argv)
 
-    if not args.family and not args.pedigree:
-        print("error: provide at least one of --family or --pedigree", file=sys.stderr)
+    if not (args.input or args.pedigree or args.family):
+        print("ga4gh2abusua: give a GA4GH Pedigree or a Phenopackets Family", file=sys.stderr)
+        return 2
+    pedigree_path, family_path = args.pedigree, args.family
+    try:
+        if args.input:
+            kind = detect(load(args.input))
+            if kind not in ("family", "pedigree"):
+                print("ga4gh2abusua: {} is not a GA4GH Pedigree or a Phenopackets Family".format(args.input),
+                      file=sys.stderr)
+                return 2
+            if (family_path if kind == "family" else pedigree_path):
+                print("ga4gh2abusua: two {} were given".format(
+                    "Families" if kind == "family" else "GA4GH Pedigrees"), file=sys.stderr)
+                return 2
+            if kind == "family":
+                family_path = args.input
+            else:
+                pedigree_path = args.input
+        pedigree = load(pedigree_path) if pedigree_path else None
+        family = load(family_path) if family_path else None
+    except FileNotFoundError as exc:
+        print("ga4gh2abusua: cannot find {}".format(exc.filename), file=sys.stderr)
+        return 2
+    except (OSError, ValueError) as exc:
+        print("ga4gh2abusua: could not read the file: {}".format(exc), file=sys.stderr)
         return 2
 
     try:
-        family = _load(args.family)
-        pedigree = _load(args.pedigree)
-    except Exception as e:  # noqa: BLE001
-        print(f"error: could not read input: {e}", file=sys.stderr)
+        session, notes = to_abusua_session(ga4gh_pedigree=pedigree, family=family, family_id=args.family_id)
+    except LegacyFileError as exc:
+        print("ga4gh2abusua: {}".format(exc), file=sys.stderr)
         return 2
-
-    session, warns = to_abusua_session(
-        ga4gh_pedigree=pedigree, family=family, family_id=args.family_id)
-    _emit_warnings(warns)
-
-    text = json.dumps(session, indent=args.indent)
-
-    if args.stdout or not args.out:
-        if not args.out:
-            # default to a sensible filename derived from an input when not piping
-            if not args.stdout:
-                stem = pathlib.Path(args.family or args.pedigree).stem
-                # strip our known suffixes
-                for suff in (".family", ".ga4gh-pedigree", ".pedigree"):
-                    if stem.endswith(suff):
-                        stem = stem[: -len(suff)]
-                out_path = pathlib.Path(stem + ".json")
-                out_path.write_text(text, encoding="utf-8")
-                print(f"wrote {out_path}")
-                return 0
-        print(text)
+    except ValueError as exc:
+        print("ga4gh2abusua: {}".format(exc), file=sys.stderr)
+        return 1
+    _emit(notes)
+    text = json.dumps(session, indent=args.indent, ensure_ascii=False) + "\n"
+    if args.stdout:
+        sys.stdout.write(text)
         return 0
-
-    out_path = pathlib.Path(args.out)
-    if out_path.parent and not out_path.parent.exists():
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(text, encoding="utf-8")
-    print(f"wrote {out_path}")
+    out = pathlib.Path(args.out) if args.out else default_output(pedigree_path or family_path)
+    inputs = {pathlib.Path(p).resolve() for p in (pedigree_path, family_path) if p}
+    if out.resolve() in inputs:
+        out = out.with_name(out.name[: -len(".json")] + ".abusua.json")
+        print("ga4gh2abusua: the session would have replaced the input, so it is written to {}".format(out),
+              file=sys.stderr)
+    if out.parent and not out.parent.exists():
+        out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(text, encoding="utf-8")
+    people = len(session["people"])
+    print("{} {}, {} union{}.".format(people, "person" if people == 1 else "people", len(session["unions"]),
+                                      "" if len(session["unions"]) == 1 else "s"))
+    print("  wrote {}".format(out))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())

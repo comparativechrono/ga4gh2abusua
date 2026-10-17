@@ -1,0 +1,204 @@
+{
+  "id": "BOATENG",
+  "proband": {
+    "id": "BOATENG-i3",
+    "subject": {
+      "id": "i3",
+      "vitalStatus": {
+        "status": "ALIVE"
+      },
+      "sex": "MALE"
+    },
+    "diseases": [
+      {
+        "term": {
+          "id": "MONDO:0007739",
+          "label": "Huntington disease"
+        }
+      }
+    ],
+    "metaData": {
+      "created": "2026-10-17T12:00:00Z",
+      "createdBy": "abusua2ga4gh 0.3.0",
+      "resources": [
+        {
+          "id": "mondo",
+          "name": "Mondo Disease Ontology",
+          "url": "http://purl.obolibrary.org/obo/mondo.obo",
+          "version": "2026-10-06",
+          "namespacePrefix": "MONDO",
+          "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+        }
+      ],
+      "phenopacketSchemaVersion": "2.0"
+    }
+  },
+  "relatives": [
+    {
+      "id": "BOATENG-i1",
+      "subject": {
+        "id": "i1",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007739",
+            "label": "Huntington disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i6",
+      "subject": {
+        "id": "i6",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007739",
+            "label": "Huntington disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "consanguinousParents": false,
+  "pedigree": {
+    "persons": [
+      {
+        "familyId": "BOATENG",
+        "individualId": "i1",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i2",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i3",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i4",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i5",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i6",
+        "paternalId": "i3",
+        "maternalId": "i5",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i7",
+        "paternalId": "i3",
+        "maternalId": "i5",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i8",
+        "paternalId": "0",
+        "maternalId": "i4",
+        "sex": "FEMALE",
+        "affectedStatus": "MISSING"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i9",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "BOATENG",
+        "individualId": "i10",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      }
+    ]
+  },
+  "metaData": {
+    "created": "2026-10-17T12:00:00Z",
+    "createdBy": "abusua2ga4gh 0.3.0",
+    "resources": [
+      {
+        "id": "mondo",
+        "name": "Mondo Disease Ontology",
+        "url": "http://purl.obolibrary.org/obo/mondo.obo",
+        "version": "2026-10-06",
+        "namespacePrefix": "MONDO",
+        "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+      }
+    ],
+    "phenopacketSchemaVersion": "2.0"
+  }
+}

@@ -1,37 +1,40 @@
-"""
-ga4gh2abusua \u2014 reconstruct an Abusua Pedigree Studio session (.json) from GA4GH
-inputs: a GA4GH Pedigree Standard message and/or a Phenopackets v2 Family.
+"""ga4gh2abusua: rebuild Abusua Pedigree Studio sessions from GA4GH files.
 
-This is the inverse of ``abusua2ga4gh``.
+It reads a GA4GH Pedigree or a Phenopackets Family through pedigree-ga4gh,
+the one GA4GH implementation the lab's pedigree tools share, and is the
+reverse of abusua2ga4gh: a session converted to GA4GH and back keeps its
+family, its parentage (biological and social) and its conditions.
 
-Quick start
------------
->>> import json
->>> from ga4gh2abusua import to_abusua_session
->>> family = json.load(open("fam.family.json"))
->>> pedigree = json.load(open("fam.ga4gh-pedigree.json"))
->>> session, warns = to_abusua_session(ga4gh_pedigree=pedigree, family=family)
->>> json.dump(session, open("fam.json", "w"), indent=2)
+Quick start::
+
+    import json
+    from ga4gh2abusua import to_abusua_session
+
+    with open("asante.ga4gh-pedigree.json") as fh:
+        pedigree = json.load(fh)
+    session, notes = to_abusua_session(ga4gh_pedigree=pedigree)
 
 Or from the command line::
 
-    ga4gh2abusua --family fam.family.json --pedigree fam.ga4gh-pedigree.json -o fam.json
+    ga4gh2abusua asante.ga4gh-pedigree.json -o asante.json
 """
 from __future__ import annotations
 
-from .convert import (
-    to_abusua_session,
-    apply_ga4gh_pedigree,
-    apply_family,
-)
-from .session import SessionBuilder, BuildPerson
+__version__ = "0.4.0"
+
+from .convert import (LegacyFileError, apply_family, apply_ga4gh_pedigree, apply_kindred,  # noqa: E402
+                      read_notes, to_abusua_session, to_session)
+from .session import BuildPerson, SessionBuilder  # noqa: E402
 
 __all__ = [
     "to_abusua_session",
+    "to_session",
     "apply_ga4gh_pedigree",
     "apply_family",
+    "apply_kindred",
+    "read_notes",
+    "LegacyFileError",
     "SessionBuilder",
     "BuildPerson",
+    "__version__",
 ]
-
-__version__ = "0.1.0"

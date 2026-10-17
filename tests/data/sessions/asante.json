@@ -1,0 +1,11 @@
+{"v": 1, "fam": "ASANTE", "_n": 8,
+ "people": {
+  "i1": {"id": "i1", "name": "Kofi Asante", "sex": "M", "deceased": true},
+  "i2": {"id": "i2", "name": "Ama Asante", "sex": "F", "condition": "carrier", "affected": "unaffected"},
+  "i3": {"id": "i3", "name": "Yaw Asante", "sex": "M", "bioMotherId": "i2", "bioFatherId": "i1", "paternity": "reported", "affected": "affected", "condition": "Sickle cell anaemia (HbSS)", "proband": true},
+  "i4": {"id": "i4", "name": "Akua Asante", "sex": "F", "bioMotherId": "i2", "bioFatherId": "i1", "paternity": "confirmed", "affected": "unaffected"},
+  "i5": {"id": "i5", "name": "Kwame Boateng", "sex": "M", "bioMotherId": "i2", "bioFatherId": "i1", "paternity": "social-only", "affected": "affected", "condition": "Night blindness"},
+  "i6": {"id": "i6", "name": "Esi Mensah", "sex": "F", "socialMotherId": "i2", "fosteredIn": true, "affected": "unknown"}
+ },
+ "unions": [{"a": "i1", "b": "i2"}]
+}

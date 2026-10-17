@@ -1,27 +1,32 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ga4gh2abusua"
-version = "0.3.0"
-description = "Reconstruct Abusua Pedigree Studio session files from GA4GH Pedigree and Phenopackets Family inputs."
+version = "0.4.0"
+description = "Rebuild Abusua Pedigree Studio sessions from a GA4GH Pedigree or a Phenopackets Family"
 readme = "README.md"
-requires-python = ">=3.8"
-license = { text = "MIT" }
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "Tim Hearn", email = "tjh70@cam.ac.uk"},
 ]
 keywords = ["pedigree", "phenopackets", "GA4GH", "genomics", "interoperability", "Akan"]
 classifiers = [
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
-  "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
-dependencies = []   # pure standard library; no runtime dependencies
+dependencies = ["pedigree-ga4gh>=1.0,<2"]
 
 [project.optional-dependencies]
-test = ["pytest>=7"]
+# abusua2ga4gh is needed only by the test that converts each session back again
+test = ["pytest>=7", "abusua2ga4gh>=0.3"]
 
 [project.scripts]
 ga4gh2abusua = "ga4gh2abusua.cli:main"
@@ -29,9 +34,11 @@ ga4gh2abusua = "ga4gh2abusua.cli:main"
 [project.urls]
 Homepage = "https://github.com/comparativechrono/ga4gh2abusua"
 Issues = "https://github.com/comparativechrono/ga4gh2abusua/issues"
+Changelog = "https://github.com/comparativechrono/ga4gh2abusua/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]

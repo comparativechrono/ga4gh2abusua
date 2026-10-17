@@ -1,0 +1,171 @@
+{
+  "id": "ASANTE",
+  "individuals": [
+    {
+      "id": "1",
+      "subject": {
+        "id": "i1",
+        "sex": "MALE",
+        "name": "Kofi Asante",
+        "alternate_ids": [
+          "Kofi Asante"
+        ],
+        "vital_status": {
+          "status": "DECEASED"
+        }
+      }
+    },
+    {
+      "id": "2",
+      "subject": {
+        "id": "i2",
+        "sex": "FEMALE",
+        "name": "Ama Asante",
+        "alternate_ids": [
+          "Ama Asante"
+        ],
+        "vital_status": {
+          "status": "ALIVE"
+        }
+      }
+    },
+    {
+      "id": "3",
+      "subject": {
+        "id": "i3",
+        "sex": "MALE",
+        "name": "Yaw Asante",
+        "alternate_ids": [
+          "Yaw Asante"
+        ],
+        "vital_status": {
+          "status": "ALIVE"
+        },
+        "diseases": [
+          {
+            "term": {
+              "id": "",
+              "label": "Sickle cell anaemia (HbSS)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "4",
+      "subject": {
+        "id": "i4",
+        "sex": "FEMALE",
+        "name": "Akua Asante",
+        "alternate_ids": [
+          "Akua Asante"
+        ],
+        "vital_status": {
+          "status": "ALIVE"
+        }
+      }
+    },
+    {
+      "id": "5",
+      "subject": {
+        "id": "i5",
+        "sex": "MALE",
+        "name": "Kwame Boateng",
+        "alternate_ids": [
+          "Kwame Boateng"
+        ],
+        "vital_status": {
+          "status": "ALIVE"
+        },
+        "diseases": [
+          {
+            "term": {
+              "id": "",
+              "label": "Night blindness"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6",
+      "subject": {
+        "id": "i6",
+        "sex": "FEMALE",
+        "name": "Esi Mensah",
+        "alternate_ids": [
+          "Esi Mensah"
+        ],
+        "vital_status": {
+          "status": "ALIVE"
+        }
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individual_id": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative_id": "i3"
+    },
+    {
+      "individual_id": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative_id": "i3",
+      "description": "paternity reported, not confirmed"
+    },
+    {
+      "individual_id": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative_id": "i4"
+    },
+    {
+      "individual_id": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative_id": "i4"
+    },
+    {
+      "individual_id": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative_id": "i5"
+    },
+    {
+      "individual_id": "i1",
+      "relation": {
+        "id": "KIN:022",
+        "label": "isAdoptiveParentOf"
+      },
+      "relative_id": "i5",
+      "description": "social/levirate father (non-biological)"
+    },
+    {
+      "individual_id": "i2",
+      "relation": {
+        "id": "KIN:022",
+        "label": "isAdoptiveParentOf"
+      },
+      "relative_id": "i6",
+      "description": "social/foster parent (child fostered in)"
+    }
+  ],
+  "index_patients": [
+    "i3"
+  ],
+  "narrative": "Asante family",
+  "date": "2026-10-17"
+}

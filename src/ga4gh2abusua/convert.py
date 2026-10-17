@@ -1,311 +1,340 @@
-"""
-Reconstruct an Abusua Pedigree Studio session from GA4GH inputs:
+"""Rebuild an Abusua Pedigree Studio session from GA4GH files.
 
-* a **GA4GH Pedigree Standard** message (KIN-relationship graph), and/or
-* a **Phenopackets v2 Family** (proband + relatives + native PED-style pedigree).
+The file is read through pedigree-ga4gh, the one GA4GH implementation that
+the lab's pedigree tools share, so ga4gh2abusua reads exactly the standard
+form that abusua2ga4gh, studio2ga4gh and the phenopacket toolkit write: a
+GA4GH Pedigree (Phenopackets form) or a Phenopackets v2 Family, in either
+JSON spelling. The family is then put back into Abusua's two layers:
 
-Either input alone yields a usable session; supplying both gives the most
-complete reconstruction, and the two are merged by shared individual id.
+==================================================  =================================================
+In the GA4GH files                                  In the Abusua session
+==================================================  =================================================
+isBiologicalMotherOf (KIN:027), isOvumDonorOf       ``bioMotherId``
+isBiologicalFatherOf (KIN:028), isSpermDonorOf      ``bioFatherId``, paternity ``confirmed``, or
+                                                    ``reported`` if the narrative says so
+isBiologicalParentOf (KIN:003)                      mother or father, by the parent's sex
+isParentFigureOf (KIN:020) from a social father     ``bioFatherId``, paternity ``social-only``, when
+                                                    the narrative says he is the social father
+isFosterParentOf (KIN:021), isAdoptiveParentOf      ``socialMotherId`` / ``socialFatherId``, and
+(KIN:022)                                           ``fosteredIn``
+other parent figures and step-parents               ``socialMotherId`` / ``socialFatherId``
+partners of every kind                              a union (and every couple with a child together)
+``indexPatients``, the Family's proband             ``proband``
+vital status DECEASED                               ``deceased``
+diseases and phenotypic features                    ``condition``, each written ``label [CURIE]`` so
+                                                    that abusua2ga4gh gives it the same term again
+an excluded condition                               the condition, on a person marked unaffected
+the narrative's notes                               carriers, conditions without a term, who is
+                                                    affected or unaffected, a father whose paternity
+                                                    is unknown, and fostering
+the Family's PED-style pedigree                     parents, sex, and affected or unaffected
+==================================================  =================================================
 
-Mapping back to Abusua's dual-layer model
------------------------------------------
-From the **GA4GH Pedigree** relationships:
-  KIN:027 isBiologicalMotherOf  -> bioMotherId
-  KIN:028 isBiologicalFatherOf  -> bioFatherId (paternity 'confirmed', or
-                                    'reported' if the edge says so)
-  KIN:022 isAdoptiveParentOf    -> socialMother/FatherId + fosteredIn = true
+The narrative's notes are the sentences abusua2ga4gh 0.3 writes, and those
+``pedigree-ga4gh upgrade`` writes for a file from abusua2ga4gh 0.2, so a
+session survives the round trip. Names cannot: Phenopackets have no field for
+a name, so the GA4GH files have none to give back.
 
-From the **Family.pedigree** (native PED rows):
-  maternalId / paternalId       -> bioMotherId / bioFatherId ('0' => none)
-  sex, affectedStatus           -> sex, affected
-  (a paternalId of '0' on someone who has a mother is left as unknown paternity)
-
-From the **phenopackets** (proband + relatives, or pedigree subjects):
-  diseases[].term.label         -> condition (free text restored)
-  phenotypicFeature HP:0032500  -> 'carrier' token appended to condition
-  vital_status DECEASED         -> deceased = true
-  subject.sex                   -> sex (if not already set)
-  Family.proband                -> proband = true
-
-Honest limitations
-------------------
-* Abusua-specific lineage attributes (abusua/ntoro manual overrides) are NOT
-  present in the GA4GH artefacts, so they are left unset; the tool re-derives
-  clan from the maternal chain on load. A round-trip therefore preserves
-  topology and clinical data but not a founder's *manually pinned* clan unless
-  it was also encoded elsewhere (it is not, by either standard).
-* Condition ontology ids are dropped back to their free-text labels, matching
-  how Abusua stores conditions.
+Files in the older, non-standard forms (studio2ga4gh up to 0.3 and
+abusua2ga4gh up to 0.2) are refused with a message saying to upgrade them
+first, once, with ``pedigree-ga4gh upgrade``.
 """
 from __future__ import annotations
 
+import copy
+import re
 from typing import Any, Dict, List, Optional, Tuple
+
+from pedigree_ga4gh import Kindred, detect, from_document, identify_legacy, kin
 
 from .session import SessionBuilder
 
-
-_SEX_BACK = {"MALE": "M", "FEMALE": "F", "UNKNOWN_SEX": "U", "OTHER_SEX": "U"}
-_AFFECTED_BACK = {"AFFECTED": "affected", "UNAFFECTED": "unaffected", "MISSING": "unknown"}
-
-# KIN term ids (string-compared so we don't depend on the forward package)
-KIN_BIO_MOTHER = "KIN:027"
-KIN_BIO_FATHER = "KIN:028"
-KIN_ADOPTIVE = "KIN:022"
-
-CARRIER_HP = "HP:0032500"
+_SEX_BACK = {"MALE": "M", "FEMALE": "F"}
 
 
-# ----------------------------------------------------------------- helpers
+class LegacyFileError(ValueError):
+    """The file is in an older, non-standard form and must be upgraded first."""
 
-def _subject_of(individual_or_phenopacket: Dict[str, Any]) -> Dict[str, Any]:
-    """Return the Individual fields for a pedigree member or phenopacket.
 
-    Phenopackets and GA4GH-standard pedigrees nest an Individual under
-    'subject'. Some tools instead put the fields (id, name, sex, affected,
-    diseases, ...) directly on the individual object with no 'subject' wrapper.
-    We support both: if a 'subject' is present and non-empty we use it,
-    otherwise we treat the object itself as the subject.
+# -- the narrative ---------------------------------------------------------------------------------------------
+
+_ID = r"(?<!\S)(?P<{}>\S+?)"
+_LIST = r"(?P<{}>[^.:;]+?)"
+_TEXT = r"(?P<{}>(?:(?!\. ).)+?)"
+
+
+def _p(pattern: str, **parts: str) -> "re.Pattern":
+    return re.compile(pattern.format(**{name: kind.format(name) for name, kind in parts.items()}))
+
+
+NOTES = {
+    "reported": _p(r"{child}'s biological father, {father}, is reported, not confirmed\.", child=_ID, father=_ID),
+    "social_father": _p(r"{father} is the social father of {child}, not the biological father\.",
+                        father=_ID, child=_ID),
+    "unknown_father": _p(r"{child}'s father is recorded as {father}, but it is not known whether he is the "
+                         r"biological father\.", child=_ID, father=_ID),
+    "fostered": _p(r"{child} was fostered in(?: by {by})?\.", child=_ID, by=_LIST),
+    "social_parent": _p(r"{parent} is the social (?P<role>mother|father) of {child}\.(?!\S)", parent=_ID,
+                        child=_ID),
+    "carrier": _p(r"{person} is a carrier\.", person=_ID),
+    "carriers": _p(r"{people} are each a carrier\.", people=_LIST),
+    "unmatched": _p(r"{person} has {condition}, which has no ontology term yet\.", person=_ID, condition=_TEXT),
+    "unmatched_excluded": _p(r"{person} is unaffected by {condition}, which has no ontology term yet\.",
+                             person=_ID, condition=_TEXT),
+    "affected": _p(r"{person} is affected, but no condition is recorded\.", person=_ID),
+    "unaffected": _p(r"Recorded as unaffected: {people}\.", people=_LIST),
+    # what pedigree-ga4gh upgrade keeps of an abusua2ga4gh 0.2 relationship's description
+    "legacy": _p(r"{a} and {b}: (?P<desc>paternity reported, not confirmed|social/levirate father "
+                 r"\(non-biological\)|social/foster parent \(child fostered in\))\.", a=_ID, b=_ID),
+}
+
+
+def _split_list(text: str) -> List[str]:
+    return [x.strip() for x in re.split(r",\s*|\s+and\s+", text or "") if x.strip()]
+
+
+def read_notes(narrative: Optional[str]) -> Dict[str, Any]:
+    """What the narrative's notes say, keyed by the GA4GH ids they name."""
+    text = narrative or ""
+    out: Dict[str, Any] = {"reported": set(), "social_father": set(), "unknown_father": {}, "fostered": {},
+                           "social_parent": [], "carrier": [], "unmatched": [], "affected": [], "unaffected": []}
+    for m in NOTES["reported"].finditer(text):
+        out["reported"].add((m["child"], m["father"]))
+    for m in NOTES["social_father"].finditer(text):
+        out["social_father"].add((m["father"], m["child"]))
+    for m in NOTES["unknown_father"].finditer(text):
+        out["unknown_father"].setdefault(m["child"], m["father"])
+    for m in NOTES["fostered"].finditer(text):
+        out["fostered"].setdefault(m["child"], _split_list(m["by"]) if m["by"] else [])
+    for m in NOTES["social_parent"].finditer(text):
+        out["social_parent"].append((m["parent"], m["role"], m["child"]))
+    for m in NOTES["carrier"].finditer(text):
+        out["carrier"].append(m["person"])
+    for m in NOTES["carriers"].finditer(text):
+        out["carrier"].extend(_split_list(m["people"]))
+    for m in NOTES["unmatched"].finditer(text):
+        out["unmatched"].append((m["person"], m["condition"], False))
+    for m in NOTES["unmatched_excluded"].finditer(text):
+        out["unmatched"].append((m["person"], m["condition"], True))
+    for m in NOTES["affected"].finditer(text):
+        out["affected"].append(m["person"])
+    for m in NOTES["unaffected"].finditer(text):
+        out["unaffected"].extend(_split_list(m["people"]))
+    for m in NOTES["legacy"].finditer(text):
+        a, b, desc = m["a"], m["b"], m["desc"]
+        if desc.startswith("paternity"):
+            out["reported"].add((b, a))
+        elif desc.startswith("social/levirate"):
+            out["social_father"].add((a, b))
+        else:
+            out["fostered"].setdefault(b, [])
+    return out
+
+
+# -- a Kindred into a session ----------------------------------------------------------------------------------
+
+def _term_token(t) -> str:
+    """A condition as the session records it: its label, then its ontology id in brackets."""
+    if t.matched:
+        return "{} [{}]".format(t.label or t.id, t.id)
+    return t.label or t.id
+
+
+def _slot(child, parent_id: str, sex: str) -> None:
+    """Put a social parent in the social mother's or father's place, by their sex."""
+    if sex == "F" and not child.socialMotherId:
+        child.socialMotherId = parent_id
+    elif sex == "M" and not child.socialFatherId:
+        child.socialFatherId = parent_id
+    elif sex not in ("M", "F"):
+        if not child.socialMotherId:
+            child.socialMotherId = parent_id
+        elif not child.socialFatherId:
+            child.socialFatherId = parent_id
+
+
+_FOSTER = {kin.FOSTER_PARENT, kin.ADOPTIVE_PARENT}
+_PARTNERS = {kin.PARTNER, kin.CONSANGUINEOUS_PARTNER, kin.SEPARATED_PARTNER, kin.SEPARATED_CONSANGUINEOUS_PARTNER}
+_NOT_KEPT = {kin.GESTATIONAL_CARRIER: "a gestational carrier", kin.HAS_GESTATIONAL_CARRIER: "a gestational carrier",
+             kin.MITOCHONDRIAL_DONOR: "a mitochondrial donor"}
+
+
+def apply_kindred(builder: SessionBuilder, k: Kindred, *, fill_only: bool = False) -> List[str]:
+    """Put a Kindred into the session being built. Returns notes about the conversion.
+
+    With ``fill_only``, only what the session does not have yet is filled in,
+    so that a Family can add the affected status a GA4GH Pedigree may lack.
     """
-    subj = individual_or_phenopacket.get("subject")
-    if isinstance(subj, dict) and subj:
-        return subj
-    return individual_or_phenopacket
+    warnings: List[str] = []
+    if not fill_only:
+        builder.family_id = k.id or builder.family_id
+    builder.reserve(m.id for m in k.members)
+    known = {m.id for m in k.members}
+    hints = read_notes(k.narrative)
+    sex_of = {m.id: _SEX_BACK.get(m.sex, "U") for m in k.members}
+    aid = builder.abusua_id_for
 
-
-def _name_from_subject(subj: Dict[str, Any]) -> str:
-    """Recover a human name from a subject Individual.
-
-    Phenopackets has no dedicated name field (it is designed to be
-    de-identifiable), so a name, when present, may appear under ``name`` (how
-    abusua2ga4gh writes it), as a ``label``, or as the first ``alternate_ids``
-    entry. We check them in that order.
-    """
-    if subj.get("name"):
-        return str(subj["name"])
-    if subj.get("label"):
-        return str(subj["label"])
-    alt = subj.get("alternate_ids") or subj.get("alternateIds") or []
-    return str(alt[0]) if alt else ""
-
-
-def _conditions_from_phenopacket(pp: Dict[str, Any]) -> Tuple[List[str], bool]:
-    """Return (condition_labels, is_carrier) from a phenopacket.
-
-    Conditions are gathered from BOTH ``diseases`` and ``phenotypicFeatures``
-    (excluding the special carrier feature), so a pedigree exported with
-    conditions recorded as phenotypes is read back the same way as one that
-    recorded them as diseases. An excluded disease/feature (an explicitly absent
-    finding) is skipped.
-    """
-    labels: List[str] = []
-    for d in pp.get("diseases", []):
-        if d.get("excluded"):
+    for m in k.members:
+        new = aid(m.id) not in builder.people
+        p = builder.person(m.id)
+        if fill_only and not new:
+            if p.sex == "U":
+                p.sex = sex_of[m.id]
+            if p.affected == "unknown" and m.affected is not None:
+                p.affected = "affected" if m.affected else "unaffected"
             continue
-        term = d.get("term", {}) or {}
-        label = term.get("label") or term.get("id") or ""
-        if label:
-            labels.append(label)
-    is_carrier = False
-    for f in pp.get("phenotypicFeatures", []) or pp.get("phenotypic_features", []) or []:
-        term = f.get("type", {}) or {}
-        if term.get("id") == CARRIER_HP:
-            is_carrier = True
+        if fill_only:
+            warnings.append("{} is in the Family but not in the GA4GH Pedigree".format(m.id))
+        p.sex = sex_of[m.id]
+        p.deceased = m.vital_status == "DECEASED"
+        p.proband = p.proband or m.index
+        if aid(m.id) != m.id:
+            p.add_note("GA4GH id: {}".format(m.id))
+        included = [_term_token(t) for t in m.terms if not t.excluded]
+        excluded = [_term_token(t) for t in m.terms if t.excluded]
+        for token in included or excluded:
+            p.add_condition(token)
+        if included and excluded:
+            warnings.append("{}: Abusua cannot record that someone does not have a condition beside conditions "
+                            "they have, so {} {} left out".format(m.id, ", ".join(excluded),
+                                                                 "was" if len(excluded) == 1 else "were"))
+        if m.affected is True or included:
+            p.affected = "affected"
+        elif m.affected is False or excluded:
+            p.affected = "unaffected"
+
+    # biological parents: pedigree-ga4gh places donors, parents of unknown sex and the parents of twins
+    social_fathers = {(f, c) for f, c in hints["social_father"] if f in known and c in known}
+    for m in k.members:
+        child = builder.person(m.id)
+        if fill_only and (child.bioMotherId or child.bioFatherId):
             continue
-        if f.get("excluded"):
+        father, mother, notes = k.genetic_parents(m.id)
+        warnings.extend(notes)
+        for r in k.relations_to(m.id):
+            if r.kin in (kin.SPERM_DONOR, kin.OVUM_DONOR, kin.SURROGATE_OVUM_DONOR):
+                warnings.append("{}: {} is {}, recorded as the biological {} (Abusua has no field for a "
+                                "donor)".format(m.id, r.individual, kin.TERMS[r.kin].label,
+                                                "father" if r.kin == kin.SPERM_DONOR else "mother"))
+            elif r.kin in _NOT_KEPT:
+                warnings.append("{}: {} is {}, which Abusua has no field for".format(
+                    m.id, r.individual, _NOT_KEPT[r.kin]))
+        if mother:
+            child.bioMotherId = aid(mother)
+        if father:
+            child.bioFatherId = aid(father)
+            child.paternity = "reported" if (m.id, father) in hints["reported"] else "confirmed"
+        else:
+            social = [f for f, c in social_fathers if c == m.id]
+            recorded = hints["unknown_father"].get(m.id)
+            if social:
+                child.bioFatherId, child.paternity = aid(social[0]), "social-only"
+            elif recorded in known:
+                child.bioFatherId, child.paternity = aid(recorded), "unknown"
+            elif mother:
+                child.paternity = "unknown"
+
+    # social parents, partners, and the relationships Abusua has no place for
+    for r in k.relations:
+        a, b = r.individual, r.relative
+        if a not in known or b not in known:
             continue
-        label = term.get("label") or term.get("id") or ""
-        if label:
-            labels.append(label)
-    return labels, is_carrier
+        child = builder.person(b)
+        if r.kin in _FOSTER:
+            if (a, b) in social_fathers:
+                continue                      # 0.2 wrote a social father as an adoptive parent
+            if not (fill_only and (child.socialMotherId or child.socialFatherId)):
+                _slot(child, aid(a), sex_of.get(a, "U"))
+                child.fosteredIn = True
+            if r.kin == kin.ADOPTIVE_PARENT:
+                warnings.append("{}: {} is an adoptive parent, recorded as the social parent of a child fostered "
+                                "in (Abusua has no field for adoption)".format(b, a))
+        elif r.kin in (kin.PARENT_FIGURE, kin.STEP_PARENT):
+            if (a, b) in social_fathers:
+                continue
+            _slot(child, aid(a), sex_of.get(a, "U"))
+            if r.kin == kin.STEP_PARENT:
+                warnings.append("{}: {} is a step-parent, recorded as a social parent".format(b, a))
+        elif r.kin in _PARTNERS:
+            builder.add_union(a, b)
+        elif kin.is_a(r.kin, kin.BIOLOGICAL_PARENT) or r.kin in _NOT_KEPT:
+            continue                          # done above
+        elif kin.is_a(r.kin, "KIN:007"):
+            continue                          # siblings and twins: they share parents, which are recorded
+        elif not fill_only:
+            warnings.append("{} {} {}: Abusua has no field for this relationship, so it is not kept".format(
+                a, kin.TERMS[r.kin].label if r.kin in kin.TERMS else r.kin, b))
+
+    # what the narrative says that the structure cannot
+    for child_id, by in hints["fostered"].items():
+        if child_id in known:
+            child = builder.person(child_id)
+            child.fosteredIn = True
+            for parent in by:
+                if parent in known and aid(parent) not in (child.socialMotherId, child.socialFatherId):
+                    _slot(child, aid(parent), sex_of.get(parent, "U"))
+    for parent, role, child_id in hints["social_parent"]:
+        if parent in known and child_id in known:
+            _slot(builder.person(child_id), aid(parent), "F" if role == "mother" else "M")
+    for person in hints["carrier"]:
+        if person in known:
+            builder.person(person).add_condition("carrier")
+    for person, condition, excluded in hints["unmatched"]:
+        if person in known:
+            p = builder.person(person)
+            p.add_condition(condition)
+            if p.affected == "unknown":
+                p.affected = "unaffected" if excluded else "affected"
+    for person in hints["affected"]:
+        if person in known:
+            builder.person(person).affected = "affected"
+    for person in hints["unaffected"]:
+        if person in known and builder.person(person).affected == "unknown":
+            builder.person(person).affected = "unaffected"
+    return warnings
 
 
-def _apply_phenopacket(builder: SessionBuilder, pp: Dict[str, Any], *, is_proband: bool) -> None:
-    subj = _subject_of(pp)
-    sid = subj.get("id")
-    if not sid:
+# -- reading files ---------------------------------------------------------------------------------------------
+
+def check_form(doc: Dict[str, Any], what: str = "file") -> None:
+    """Raise :class:`LegacyFileError` for a file in an older, non-standard form."""
+    old = identify_legacy(doc)
+    if old is None:
         return
-    person = builder.person(sid)
-    # name
-    nm = _name_from_subject(subj)
-    if nm and not person.name:
-        person.name = nm
-    # sex
-    sex = _SEX_BACK.get(subj.get("sex", "UNKNOWN_SEX"), "U")
-    if person.sex == "U":
-        person.sex = sex
-    # vital status
-    vs = (subj.get("vital_status") or subj.get("vitalStatus") or {}).get("status")
-    if vs == "DECEASED":
-        person.deceased = True
-    # conditions + carrier
-    labels, is_carrier = _conditions_from_phenopacket(pp)
-    tokens = [t for t in (person.condition.split(";") if person.condition else []) if t.strip()]
-    for label in labels:
-        if label not in tokens:
-            tokens.append(label)
-    if is_carrier and "carrier" not in [t.strip().lower() for t in tokens]:
-        tokens.append("carrier")
-    person.condition = ";".join(tokens)
-    # affected: any non-excluded disease => affected (unless already set affected/unaffected)
-    if labels and person.affected in ("unknown", ""):
-        person.affected = "affected"
-    if is_proband:
-        person.proband = True
+    if not old.upgradable:
+        raise LegacyFileError(old.description)
+    raise LegacyFileError("{} Upgrade it first, once: pedigree-ga4gh upgrade FILE -o NEW.json".format(
+        old.description))
 
 
-# ----------------------------------------------------------------- pedigree (GA4GH)
+def _kindred(doc: Dict[str, Any], expect: Optional[str], warnings: List[str]) -> Kindred:
+    if not isinstance(doc, dict):
+        raise ValueError("the file must hold a JSON object")
+    check_form(doc)
+    kind = detect(doc)
+    if expect and kind != expect:
+        warnings.append("the file given as a {} is a {}; it was read as one".format(
+            {"pedigree": "GA4GH Pedigree", "family": "Phenopackets Family"}[expect],
+            {"pedigree": "GA4GH Pedigree", "family": "Phenopackets Family", "cohort": "Phenopackets Cohort",
+             "phenopacket": "Phenopacket"}.get(kind, "file of unknown kind")))
+    k, w = from_document(copy.deepcopy(doc))
+    warnings.extend(w)
+    return k
+
 
 def apply_ga4gh_pedigree(builder: SessionBuilder, pedigree: Dict[str, Any]) -> List[str]:
-    """Populate the builder from a GA4GH Pedigree Standard message."""
-    warns: List[str] = []
-    if not isinstance(pedigree, dict) or "individuals" not in pedigree:
-        warns.append("ga4gh-pedigree: no 'individuals' field; skipped.")
-        return warns
-
-    if pedigree.get("id"):
-        builder.family_id = pedigree["id"]
-
-    # individuals carry the real identity in subject.id
-    probands = set(pedigree.get("index_patients") or pedigree.get("indexPatients") or [])
-    for ind in pedigree["individuals"]:
-        subj = _subject_of(ind)
-        sid = subj.get("id")
-        if not sid:
-            warns.append("ga4gh-pedigree: an individual has no subject.id; skipped.")
-            continue
-        person = builder.person(sid)
-        nm = _name_from_subject(subj)
-        if nm and not person.name:
-            person.name = nm
-        if person.sex == "U":
-            person.sex = _SEX_BACK.get(subj.get("sex", "UNKNOWN_SEX"), "U")
-        vs = (subj.get("vital_status") or subj.get("vitalStatus") or {}).get("status")
-        if vs == "DECEASED":
-            person.deceased = True
-        # affected status may appear as an individual-level boolean/string in some
-        # tools' output (subject has no diseases but flags affected directly)
-        aff = subj.get("affected")
-        if isinstance(aff, bool):
-            if person.affected in ("unknown", ""):
-                person.affected = "affected" if aff else "unaffected"
-        elif isinstance(aff, str) and aff.lower() in ("affected", "unaffected"):
-            if person.affected in ("unknown", ""):
-                person.affected = aff.lower()
-        # diseases optionally attached to the subject
-        for d in subj.get("diseases", []) or []:
-            term = d.get("term", {}) or {}
-            label = term.get("label") or term.get("id") or ""
-            if label:
-                toks = [t for t in (person.condition.split(";") if person.condition else []) if t.strip()]
-                if label not in toks:
-                    toks.append(label)
-                person.condition = ";".join(toks)
-                if person.affected in ("unknown", ""):
-                    person.affected = "affected"
-        if sid in probands:
-            person.proband = True
-
-    # relationships -> parentage edges
-    for rel in pedigree.get("relationships", []):
-        relation = (rel.get("relation") or {}).get("id")
-        subject_id = (rel.get("individual_id") or rel.get("individualId")
-                      or rel.get("individual"))
-        relative_id = (rel.get("relative_id") or rel.get("relativeId")
-                       or rel.get("relative"))
-        desc = (rel.get("description") or "").lower()
-        if not relation or not subject_id or not relative_id:
-            continue
-        # relation reads "subject <relation> relative": e.g. mother isBiologicalMotherOf child
-        parent_src, child_src = subject_id, relative_id
-        child = builder.person(child_src)
-        parent_aid = builder.abusua_id_for(parent_src)
-        builder.person(parent_src)  # ensure exists
-        if relation == KIN_BIO_MOTHER:
-            child.bioMotherId = parent_aid
-        elif relation == KIN_BIO_FATHER:
-            child.bioFatherId = parent_aid
-            child.paternity = "reported" if "report" in desc else "confirmed"
-        elif relation == KIN_ADOPTIVE:
-            # social/foster parent; route by the parent's known sex if available
-            par = builder.people.get(parent_aid)
-            child.fosteredIn = True
-            if par and par.sex == "M":
-                child.socialFatherId = parent_aid
-            elif par and par.sex == "F":
-                child.socialMotherId = parent_aid
-            else:
-                # unknown sex: prefer the empty social slot
-                if not child.socialMotherId:
-                    child.socialMotherId = parent_aid
-                else:
-                    child.socialFatherId = parent_aid
-        else:
-            warns.append(f"ga4gh-pedigree: unmapped relation '{relation}' (kept out of session).")
-    return warns
+    """Put a GA4GH Pedigree into the session being built."""
+    warnings: List[str] = []
+    k = _kindred(pedigree, "pedigree", warnings)
+    return warnings + apply_kindred(builder, k)
 
 
-# ----------------------------------------------------------------- family (Phenopackets)
+def apply_family(builder: SessionBuilder, family: Dict[str, Any], *, fill_only: bool = False) -> List[str]:
+    """Put a Phenopackets Family into the session being built."""
+    warnings: List[str] = []
+    k = _kindred(family, "family", warnings)
+    return warnings + apply_kindred(builder, k, fill_only=fill_only)
 
-def apply_family(builder: SessionBuilder, family: Dict[str, Any]) -> List[str]:
-    """Populate the builder from a Phenopackets Family message."""
-    warns: List[str] = []
-    if not isinstance(family, dict):
-        warns.append("family: not an object; skipped.")
-        return warns
-    if family.get("id"):
-        builder.family_id = family["id"]
-
-    # 1) native pedigree rows give topology + sex + affected status
-    pedigree = family.get("pedigree") or {}
-    persons = pedigree.get("persons", [])
-    for row in persons:
-        sid = row.get("individualId") or row.get("individual_id")
-        if not sid:
-            continue
-        person = builder.person(sid)
-        person.sex = _SEX_BACK.get(row.get("sex", "UNKNOWN_SEX"), person.sex or "U")
-        person.affected = _AFFECTED_BACK.get(row.get("affectedStatus")
-                                             or row.get("affected_status"), person.affected)
-        mat = row.get("maternalId") or row.get("maternal_id") or "0"
-        pat = row.get("paternalId") or row.get("paternal_id") or "0"
-        if mat and mat != "0":
-            person.bioMotherId = builder.abusua_id_for(mat)
-            builder.person(mat)
-        if pat and pat != "0":
-            person.bioFatherId = builder.abusua_id_for(pat)
-            builder.person(pat)
-            # native pedigree carries no certainty; default to confirmed unless a
-            # GA4GH relationship later refines it
-            if person.paternity not in ("reported", "social-only", "unknown"):
-                person.paternity = "confirmed"
-        else:
-            # father absent in PED: if a mother exists, mark paternity unknown
-            if person.bioMotherId and not person.bioFatherId:
-                person.paternity = "unknown"
-
-    # 2) consanguinity note on the proband's parents (informational)
-    consang = family.get("consanguinousParents")
-    if consang is None:
-        consang = family.get("consanguinous_parents")
-
-    # 3) proband + relatives phenopackets give names/conditions/carrier/deceased
-    proband = family.get("proband")
-    if proband:
-        _apply_phenopacket(builder, proband, is_proband=True)
-        if consang:
-            subj = _subject_of(proband)
-            pid = subj.get("id")
-            if pid:
-                bp = builder.person(pid)
-                note = "parents consanguineous (from Phenopackets Family)."
-                bp.notes = (bp.notes + " " + note).strip() if bp.notes else note
-    for rel in family.get("relatives", []) or []:
-        _apply_phenopacket(builder, rel, is_proband=False)
-
-    return warns
-
-
-# ----------------------------------------------------------------- public API
 
 def to_abusua_session(
     *,
@@ -313,40 +342,47 @@ def to_abusua_session(
     family: Optional[Dict[str, Any]] = None,
     family_id: Optional[str] = None,
 ) -> Tuple[Dict[str, Any], List[str]]:
-    """Reconstruct an Abusua session dict from GA4GH inputs.
+    """Rebuild an Abusua session from a GA4GH Pedigree, a Phenopackets Family, or both.
 
-    At least one of ``ga4gh_pedigree`` or ``family`` must be provided. Returns
-    ``(session_dict, conversion_warnings)``.
-
-    When both are provided, the Family is applied first (it gives topology, sex,
-    affected status and clinical detail), then the GA4GH Pedigree is layered on
-    to refine the biological/social edge distinction and paternity certainty.
+    Returns ``(session, notes)``. With both, the GA4GH Pedigree is read first,
+    as it holds more (social and foster parents, and the narrative's notes),
+    and the Family then fills in what it lacks, such as who is unaffected.
+    Raises :class:`LegacyFileError` for a file in an older form, which must be
+    upgraded first with ``pedigree-ga4gh upgrade``.
     """
     if ga4gh_pedigree is None and family is None:
         raise ValueError("Provide at least one of ga4gh_pedigree or family.")
-
     builder = SessionBuilder(family_id=family_id or "FAM1")
-    warns: List[str] = []
-
-    if family is not None:
-        warns += apply_family(builder, family)
+    warnings: List[str] = []
     if ga4gh_pedigree is not None:
-        warns += apply_ga4gh_pedigree(builder, ga4gh_pedigree)
-
-    # ensure co-parents are linked as unions (Abusua infers partnerships, but we
-    # add explicit ones so childless display and clustering behave)
+        warnings += apply_ga4gh_pedigree(builder, ga4gh_pedigree)
+    if family is not None:
+        warnings += apply_family(builder, family, fill_only=ga4gh_pedigree is not None)
     builder.infer_unions_from_parents()
-
     if family_id:
         builder.family_id = family_id
-
-    # final integrity sweep: null out parent refs that point nowhere
     ids = set(builder.people)
     for p in builder.people.values():
         for attr in ("bioMotherId", "bioFatherId", "socialMotherId", "socialFatherId"):
             ref = getattr(p, attr)
             if ref and ref not in ids:
-                warns.append(f"{p.id}: {attr} -> unknown id '{ref}' (cleared).")
+                warnings.append("{}: {} -> unknown id '{}' (cleared).".format(p.id, attr, ref))
                 setattr(p, attr, None)
+    return builder.to_session(), list(dict.fromkeys(warnings))
 
-    return builder.to_session(), warns
+
+def to_session(doc: Dict[str, Any], family_id: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
+    """Rebuild a session from one file, whichever of the two it is."""
+    if not isinstance(doc, dict):
+        raise ValueError("the file must hold a JSON object")
+    check_form(doc)
+    kind = detect(doc)
+    if kind == "family":
+        return to_abusua_session(family=doc, family_id=family_id)
+    if kind == "pedigree":
+        return to_abusua_session(ga4gh_pedigree=doc, family_id=family_id)
+    raise ValueError("this is not a GA4GH Pedigree or a Phenopackets Family")
+
+
+__all__ = ["LegacyFileError", "NOTES", "apply_family", "apply_ga4gh_pedigree", "apply_kindred", "check_form",
+           "read_notes", "to_abusua_session", "to_session"]
