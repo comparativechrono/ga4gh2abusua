@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ga4gh2abusua"
+version = "0.3.0"
+description = "Reconstruct Abusua Pedigree Studio session files from GA4GH Pedigree and Phenopackets Family inputs."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    {name = "Tim Hearn", email = "tjh70@cam.ac.uk"},
+]
+keywords = ["pedigree", "phenopackets", "GA4GH", "genomics", "interoperability", "Akan"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = []   # pure standard library; no runtime dependencies
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+ga4gh2abusua = "ga4gh2abusua.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/comparativechrono/ga4gh2abusua"
+Issues = "https://github.com/comparativechrono/ga4gh2abusua/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
