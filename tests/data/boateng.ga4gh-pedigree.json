@@ -1,6 +1,6 @@
 {
   "id": "BOATENG",
-  "narrative": "Pedigree from Abusua Pedigree Studio: 10 people; proband i3. Conditions: Huntington disease, Hypertension. i8's father is recorded as i9, but it is not known whether he is the biological father. i9 has Hypertension, which has no ontology term yet. Recorded as unaffected: i2, i4, i5, i7 and i10.",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 10 people; proband i3. Conditions: Huntington disease, Hypertension. i8's father is recorded as i9, but it is not known whether he is the biological father. i9 has \"Hypertension\", which has no ontology term yet. Recorded as unaffected: i2, i4, i5, i7 and i10.",
   "date": "2026-10-17",
   "indexPatients": [
     "i3"

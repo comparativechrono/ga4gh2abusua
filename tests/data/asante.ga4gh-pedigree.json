@@ -1,6 +1,6 @@
 {
   "id": "ASANTE",
-  "narrative": "Pedigree from Abusua Pedigree Studio: 6 people; proband i3. Conditions: Night blindness, sickle cell disease. i3's biological father, i1, is reported, not confirmed. i1 is the social father of i5, not the biological father. i6 was fostered in by i2. i2 is a carrier. i5 has Night blindness, which has no ontology term yet. Recorded as unaffected: i2 and i4.",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 6 people; proband i3. Conditions: Night blindness, sickle cell disease. i3's biological father, i1, is reported, not confirmed. i1 is the social father of i5, not the biological father. i6 was fostered in. i2 is the social mother of i6. i2 is a carrier. i5 has \"Night blindness\", which has no ontology term yet. Recorded as unaffected: i2 and i4.",
   "date": "2026-10-17",
   "indexPatients": [
     "i3"

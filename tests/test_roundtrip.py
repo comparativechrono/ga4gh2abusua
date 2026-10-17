@@ -106,18 +106,33 @@ def test_the_narrative_is_read():
         "Seen at the clinic. Pedigree from Abusua Pedigree Studio: 6 people; proband i3. Conditions: x. "
         "i3's biological father, i1, is reported, not confirmed. i1 is the social father of i5, not the "
         "biological father. i8's father is recorded as i9, but it is not known whether he is the biological "
-        "father. i6 was fostered in by i2 and i7. i10 was fostered in. i9 is the social mother of i4. "
-        "i2 is a carrier. i11 and i12 are each a carrier. i5 has Night blindness, which has no ontology term "
-        "yet. i4 is unaffected by Long QT syndrome (type 1), which has no ontology term yet. i13 is affected, but "
-        "no condition is recorded. Recorded as unaffected: i14, i15 and i16.")
+        "father. i6 was fostered in. i2 is the social mother of i6. i7 is the social father of i6. "
+        "i9 is the social mother of i4. i2 is a carrier. i5 has \"Night blindness\", which has no ontology "
+        "term yet. i4 is unaffected by \"Long QT syndrome (type 1). Or so\", which has no ontology term yet. "
+        "i5 has \"An \\\"odd\\\" one\", which has no ontology term yet. i13 is affected, but no condition "
+        "is recorded. Recorded as unaffected: i14, i15 and i16.")
     assert notes["reported"] == {("i3", "i1")}
     assert notes["social_father"] == {("i1", "i5")}
     assert notes["unknown_father"] == {"i8": "i9"}
-    assert notes["fostered"] == {"i6": ["i2", "i7"], "i10": []}
-    assert notes["social_parent"] == [("i9", "mother", "i4")]
-    assert notes["carrier"] == ["i2", "i11", "i12"]
-    assert notes["unmatched"] == [("i5", "Night blindness", False), ("i4", "Long QT syndrome (type 1)", True)]
+    assert notes["fostered"] == {"i6"}
+    assert notes["social_parent"] == [("i2", "mother", "i6"), ("i7", "father", "i6"), ("i9", "mother", "i4")]
+    assert notes["carrier"] == ["i2"]
+    assert notes["unmatched"] == [("i5", "Night blindness", False), ("i5", 'An "odd" one', False),
+                                  ("i4", "Long QT syndrome (type 1). Or so", True)]
     assert notes["affected"] == ["i13"] and notes["unaffected"] == ["i14", "i15", "i16"]
+
+
+def test_a_persons_own_narrative_is_not_read_as_notes():
+    """Text before abusua2ga4gh's own part of the narrative, as --narrative gives it, is never a note; and a
+    note must start a sentence."""
+    notes = read_notes(
+        "The mother of i3 is a carrier. It is not known whether i4 is a carrier. We are not sure i6 was "
+        "fostered in. Neither i2 nor i7 is affected, but no condition is recorded. i2 has \"asthma\", which has "
+        "no ontology term yet. i9 was fostered in. Pedigree from Abusua Pedigree Studio: 9 people.")
+    assert notes["carrier"] == [] and notes["fostered"] == set() and notes["affected"] == []
+    assert notes["unmatched"] == []
+    session, _ = to_abusua_session(ga4gh_pedigree=load("asante.ga4gh-pedigree.json"))
+    assert session["people"]["i3"]["condition"] == "sickle cell disease [MONDO:0011382]"
 
 
 def test_an_upgraded_file_from_abusua2ga4gh_0_2():
@@ -133,6 +148,76 @@ def test_an_upgraded_file_from_abusua2ga4gh_0_2():
 
 
 # -- other files -----------------------------------------------------------------------------------------------
+
+def test_random_sessions_survive_the_round_trip():
+    """Random sessions, odd ones included (social parents of unknown sex, the same person as both social
+    parents, related couples, conditions with full stops and quotation marks, free text in brackets):
+    converting the session that comes back gives the same GA4GH files again, from the GA4GH Pedigree with
+    the Family, from the Pedigree alone, and from the Family alone. Needs abusua2ga4gh 0.3."""
+    import random
+    abusua2ga4gh = pytest.importorskip("abusua2ga4gh")
+    if tuple(int(x) for x in abusua2ga4gh.__version__.split(".")[:2]) < (0, 3):
+        pytest.skip("needs abusua2ga4gh 0.3 or later")
+    conditions = ["Sickle cell anaemia (HbSS)", "Huntington disease", "Breast cancer", "Night blindness",
+                  "Hypertension (dx. 2019)", 'An "odd" one', "Asthma [HP:0002099]", "Pain (BP:160/95)", "carrier"]
+
+    def make(rng):
+        people = {}
+        for i in range(1, rng.randint(3, 12) + 1):
+            pid, rec = "i%d" % i, {"sex": rng.choice("MFFMU")}
+            earlier = list(people)
+            if earlier and rng.random() < 0.75:
+                moms = [q for q in earlier if people[q]["sex"] == "F"]
+                dads = [q for q in earlier if people[q]["sex"] == "M"]
+                if moms and rng.random() < 0.9:
+                    rec["bioMotherId"] = rng.choice(moms)
+                if dads and rng.random() < 0.8:
+                    rec["bioFatherId"] = rng.choice(dads)
+                    rec["paternity"] = rng.choice(["confirmed", "confirmed", "reported", "social-only", "unknown"])
+            if earlier and rng.random() < 0.2:
+                rec["fosteredIn"] = True
+            if earlier and rng.random() < 0.35:
+                others = [q for q in earlier if q not in (rec.get("bioMotherId"), rec.get("bioFatherId"))]
+                for slot in rng.sample(["socialMotherId", "socialFatherId"], rng.choice([1, 1, 2])) if others else []:
+                    rec[slot] = rng.choice(others)
+            rec["affected"] = rng.choice(["affected", "unaffected", "unknown"])
+            if rng.random() < 0.6:
+                rec["condition"] = ";".join(rng.sample(conditions, rng.choice([1, 1, 2])))
+            rec["deceased"] = rng.random() < 0.2
+            people[pid] = rec
+        rng.choice(list(people.values()))["proband"] = True
+        unions = {tuple(sorted((r["bioMotherId"], r["bioFatherId"]))) for r in people.values()
+                  if r.get("bioMotherId") and r.get("bioFatherId") and rng.random() < 0.7}
+        if rng.random() < 0.5:
+            unions.add(tuple(sorted(rng.sample(list(people), 2))))
+        return {"v": 1, "fam": "R", "people": people, "unions": [{"a": a, "b": b} for a, b in sorted(unions)]}
+
+    def convert(session):
+        ped = abusua2ga4gh.Pedigree.from_dict(session)
+        p, _ = abusua2ga4gh.to_ga4gh_pedigree(ped, date="2026-10-17", created="2026-10-17T12:00:00Z",
+                                              narrative="The mother of i3 is a carrier")
+        f, _ = abusua2ga4gh.to_family(ped, created="2026-10-17T12:00:00Z")
+        return p, f
+
+    for seed in range(150):
+        p1, f1 = convert(make(random.Random(seed)))
+        assert convert(to_abusua_session(ga4gh_pedigree=p1, family=f1 or None)[0]) == (p1, f1), seed
+        assert convert(to_abusua_session(ga4gh_pedigree=p1)[0])[0] == p1, seed
+        if f1:
+            assert convert(to_abusua_session(family=f1)[0])[1] == f1, seed
+
+
+def test_social_parents_keep_their_roles():
+    """The narrative says which social parent is the mother and which the father, so their places survive even
+    when their sex is not recorded."""
+    abusua2ga4gh = pytest.importorskip("abusua2ga4gh")
+    session = {"fam": "T", "people": {"i1": {"sex": "U"}, "i2": {"sex": "U"},
+                                      "i3": {"sex": "F", "proband": True, "fosteredIn": True,
+                                             "socialMotherId": "i2", "socialFatherId": "i1"}}}
+    pedigree, _ = abusua2ga4gh.to_ga4gh_pedigree(abusua2ga4gh.Pedigree.from_dict(session))
+    back = to_abusua_session(ga4gh_pedigree=pedigree)[0]["people"]["i3"]
+    assert (back["socialMotherId"], back["socialFatherId"], back["fosteredIn"]) == ("i2", "i1", True)
+
 
 def test_a_pedigree_from_studio2ga4gh():
     session, notes = to_abusua_session(ga4gh_pedigree=load("other/okafor_ga4gh-pedigree.json"))
@@ -153,6 +238,7 @@ def test_a_pedigree_from_studio2ga4gh():
 def test_older_files_are_refused_with_a_clear_message():
     for name, as_family in (("legacy/abusua2ga4gh-0.2_ga4gh.json", False),
                             ("legacy/abusua2ga4gh-0.2_family.json", True),
+                            ("legacy/abusua2ga4gh-0.2_family_no-names.json", True),   # 0.2's usual Family
                             ("legacy/studio2ga4gh-0.3_ga4gh.json", False)):
         with pytest.raises(LegacyFileError) as err:
             if as_family:
@@ -211,8 +297,13 @@ def test_command_line(tmp_path, monkeypatch):
     src = tmp_path / "boateng.json"
     src.write_text((DATA / "boateng.ga4gh-pedigree.json").read_text(encoding="utf-8"), encoding="utf-8")
     code, out, err = run(src)
-    assert code == 0 and (tmp_path / "boateng.abusua.json").exists()
-    assert "would have replaced" in err and json.loads(src.read_text(encoding="utf-8"))["individuals"]
+    assert code == 2 and "is the file being read" in err and json.loads(src.read_text(encoding="utf-8"))["individuals"]
+    # nor, unasked, a session already there: asante.json was written above
+    before = (tmp_path / "asante.json").read_text(encoding="utf-8")
+    code, out, err = run(DATA / "asante.family.json")
+    assert code == 2 and "already exists" in err and (tmp_path / "asante.json").read_text(encoding="utf-8") == before
+    code, out, err = run(DATA / "asante.family.json", "--force")
+    assert code == 0
     code, out, err = run()
     assert code == 2
 

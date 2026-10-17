@@ -36,9 +36,11 @@ version 0.3's `--pedigree` and `--family`, the Pedigree is read first and the
 Family fills in anything it lacks.
 
 The session is written to the current folder under the input's name, without
-`.ga4gh-pedigree.json` or `.family.json`. It never replaces the input: if the
-names would be the same, it is written as `<name>.abusua.json` instead. Open it
-in Abusua Pedigree Studio with **Open / Load**.
+`.ga4gh-pedigree.json` or `.family.json`: `asante.json`, which may well be the
+session the files were made from. So it never replaces a file that is already
+there unless you name the file yourself with `-o` or give `--force`, and it
+never replaces the file it is reading. Open the session in Abusua Pedigree
+Studio with **Open / Load**.
 
 ## What the files become
 
@@ -64,10 +66,15 @@ the same term when the session is converted again.
 abusua2ga4gh says in the narrative what the GA4GH structure cannot, in fixed
 sentences that ga4gh2abusua reads back: who is a carrier, who has a condition
 without an ontology term, who is affected with no condition recorded or
-unaffected, who is recorded as a father although paternity is unknown, and who
-was fostered in. ga4gh2abusua also reads the notes that `pedigree-ga4gh
-upgrade` keeps of an abusua2ga4gh 0.2 file (reported paternity, social and
-foster parents).
+unaffected, who is recorded as a father although paternity is unknown, who is
+a social mother or father, and who was fostered in. It reads them only from
+abusua2ga4gh's own part of the narrative, after its opening sentence
+("Pedigree from Abusua Pedigree Studio: ..."), and only at the start of a
+sentence, so nothing written there by a person is taken for one of them.
+Carriers are also read from the rest of the narrative, as studio2ga4gh and
+`pedigree-ga4gh upgrade` write them, and so are the notes that the upgrade
+keeps of an abusua2ga4gh 0.2 file (reported paternity, social and foster
+parents).
 
 A person whose id in the file is not an Abusua id (`i1`, `i2` …), such as a
 pedigree number from studio2ga4gh, is given the next free one, and their own id
@@ -86,9 +93,15 @@ their own, are listed in the notes the command prints.
 - **A condition's own wording.** A matched condition comes back with its
   term's label: "Sickle cell anaemia (HbSS)" becomes `sickle cell disease
   [MONDO:0011382]`.
+- **What a session leaves unsaid comes back said.** Someone with a
+  condition whose affected status was left unknown comes back affected, and
+  two people with a child together come back as a union, as Abusua treats
+  them anyway.
 - **From a Family alone**, less again: a Family has no social or foster
   parents, couples without children or narrative, and a person without their
-  own Phenopacket (an unaffected relative) has no vital status.
+  own Phenopacket (an unaffected relative) has no vital status. Its PED-style
+  pedigree gives a father without saying how certain he is, so reported
+  paternity comes back as confirmed.
 
 ## Older files
 

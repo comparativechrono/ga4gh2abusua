@@ -46,6 +46,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from pedigree_ga4gh import Kindred, detect, from_document, identify_legacy, kin
+from pedigree_ga4gh.legacy import is_carrier_mistake
 
 from .session import SessionBuilder
 
@@ -58,32 +59,41 @@ class LegacyFileError(ValueError):
 
 # -- the narrative ---------------------------------------------------------------------------------------------
 
-_ID = r"(?<!\S)(?P<{}>\S+?)"
+# abusua2ga4gh 0.3 writes its notes after this sentence, and text given with its --narrative before it, so the
+# notes are read only from after it: nothing a person writes is taken for one of them.
+BLOCK = "Pedigree from Abusua Pedigree Studio:"
+
+_START = r"(?:^|(?<=\. ))"                       # each note starts a sentence
+_ID = r"(?P<{}>\S+?)"
 _LIST = r"(?P<{}>[^.:;]+?)"
-_TEXT = r"(?P<{}>(?:(?!\. ).)+?)"
+_QUOTED = r'"(?P<{}>(?:[^"\\]|\\.)*)"'          # a condition's text, quoted, with \" and \\ escaped
 
 
 def _p(pattern: str, **parts: str) -> "re.Pattern":
-    return re.compile(pattern.format(**{name: kind.format(name) for name, kind in parts.items()}))
+    return re.compile(_START + pattern.format(**{name: kind.format(name) for name, kind in parts.items()}))
 
 
+# the notes of abusua2ga4gh 0.3, read from its part of the narrative only
 NOTES = {
     "reported": _p(r"{child}'s biological father, {father}, is reported, not confirmed\.", child=_ID, father=_ID),
     "social_father": _p(r"{father} is the social father of {child}, not the biological father\.",
                         father=_ID, child=_ID),
     "unknown_father": _p(r"{child}'s father is recorded as {father}, but it is not known whether he is the "
                          r"biological father\.", child=_ID, father=_ID),
-    "fostered": _p(r"{child} was fostered in(?: by {by})?\.", child=_ID, by=_LIST),
+    "fostered": _p(r"{child} was fostered in\.", child=_ID),
     "social_parent": _p(r"{parent} is the social (?P<role>mother|father) of {child}\.(?!\S)", parent=_ID,
                         child=_ID),
-    "carrier": _p(r"{person} is a carrier\.", person=_ID),
-    "carriers": _p(r"{people} are each a carrier\.", people=_LIST),
-    "unmatched": _p(r"{person} has {condition}, which has no ontology term yet\.", person=_ID, condition=_TEXT),
+    "unmatched": _p(r"{person} has {condition}, which has no ontology term yet\.", person=_ID, condition=_QUOTED),
     "unmatched_excluded": _p(r"{person} is unaffected by {condition}, which has no ontology term yet\.",
-                             person=_ID, condition=_TEXT),
+                             person=_ID, condition=_QUOTED),
     "affected": _p(r"{person} is affected, but no condition is recorded\.", person=_ID),
     "unaffected": _p(r"Recorded as unaffected: {people}\.", people=_LIST),
-    # what pedigree-ga4gh upgrade keeps of an abusua2ga4gh 0.2 relationship's description
+}
+# notes read from the whole narrative: carriers, as studio2ga4gh, abusua2ga4gh and pedigree-ga4gh upgrade write
+# them, and what pedigree-ga4gh upgrade keeps of an abusua2ga4gh 0.2 relationship's description
+ANYWHERE = {
+    "carrier": _p(r"{person} is a carrier\.", person=_ID),
+    "carriers": _p(r"{people} are each a carrier\.", people=_LIST),
     "legacy": _p(r"{a} and {b}: (?P<desc>paternity reported, not confirmed|social/levirate father "
                  r"\(non-biological\)|social/foster parent \(child fostered in\))\.", a=_ID, b=_ID),
 }
@@ -93,41 +103,53 @@ def _split_list(text: str) -> List[str]:
     return [x.strip() for x in re.split(r",\s*|\s+and\s+", text or "") if x.strip()]
 
 
+def _unquote(text: str) -> str:
+    return re.sub(r"\\(.)", r"\1", text or "")
+
+
 def read_notes(narrative: Optional[str]) -> Dict[str, Any]:
-    """What the narrative's notes say, keyed by the GA4GH ids they name."""
+    """What the narrative's notes say, keyed by the GA4GH ids they name.
+
+    abusua2ga4gh's notes are read only from its own part of the narrative,
+    after the sentence that opens it ("Pedigree from Abusua Pedigree
+    Studio: ..."); carriers, and the notes ``pedigree-ga4gh upgrade`` keeps of
+    an abusua2ga4gh 0.2 file, from anywhere. Every note must start a sentence.
+    """
     text = narrative or ""
-    out: Dict[str, Any] = {"reported": set(), "social_father": set(), "unknown_father": {}, "fostered": {},
+    cut = text.rfind(BLOCK)
+    block = text[cut:] if cut >= 0 else ""
+    out: Dict[str, Any] = {"reported": set(), "social_father": set(), "unknown_father": {}, "fostered": set(),
                            "social_parent": [], "carrier": [], "unmatched": [], "affected": [], "unaffected": []}
-    for m in NOTES["reported"].finditer(text):
+    for m in NOTES["reported"].finditer(block):
         out["reported"].add((m["child"], m["father"]))
-    for m in NOTES["social_father"].finditer(text):
+    for m in NOTES["social_father"].finditer(block):
         out["social_father"].add((m["father"], m["child"]))
-    for m in NOTES["unknown_father"].finditer(text):
+    for m in NOTES["unknown_father"].finditer(block):
         out["unknown_father"].setdefault(m["child"], m["father"])
-    for m in NOTES["fostered"].finditer(text):
-        out["fostered"].setdefault(m["child"], _split_list(m["by"]) if m["by"] else [])
-    for m in NOTES["social_parent"].finditer(text):
+    for m in NOTES["fostered"].finditer(block):
+        out["fostered"].add(m["child"])
+    for m in NOTES["social_parent"].finditer(block):
         out["social_parent"].append((m["parent"], m["role"], m["child"]))
-    for m in NOTES["carrier"].finditer(text):
-        out["carrier"].append(m["person"])
-    for m in NOTES["carriers"].finditer(text):
-        out["carrier"].extend(_split_list(m["people"]))
-    for m in NOTES["unmatched"].finditer(text):
-        out["unmatched"].append((m["person"], m["condition"], False))
-    for m in NOTES["unmatched_excluded"].finditer(text):
-        out["unmatched"].append((m["person"], m["condition"], True))
-    for m in NOTES["affected"].finditer(text):
+    for m in NOTES["unmatched"].finditer(block):
+        out["unmatched"].append((m["person"], _unquote(m["condition"]), False))
+    for m in NOTES["unmatched_excluded"].finditer(block):
+        out["unmatched"].append((m["person"], _unquote(m["condition"]), True))
+    for m in NOTES["affected"].finditer(block):
         out["affected"].append(m["person"])
-    for m in NOTES["unaffected"].finditer(text):
+    for m in NOTES["unaffected"].finditer(block):
         out["unaffected"].extend(_split_list(m["people"]))
-    for m in NOTES["legacy"].finditer(text):
+    for m in ANYWHERE["carrier"].finditer(text):
+        out["carrier"].append(m["person"])
+    for m in ANYWHERE["carriers"].finditer(text):
+        out["carrier"].extend(_split_list(m["people"]))
+    for m in ANYWHERE["legacy"].finditer(text):
         a, b, desc = m["a"], m["b"], m["desc"]
         if desc.startswith("paternity"):
             out["reported"].add((b, a))
         elif desc.startswith("social/levirate"):
             out["social_father"].add((a, b))
         else:
-            out["fostered"].setdefault(b, [])
+            out["fostered"].add(b)
     return out
 
 
@@ -141,7 +163,9 @@ def _term_token(t) -> str:
 
 
 def _slot(child, parent_id: str, sex: str) -> None:
-    """Put a social parent in the social mother's or father's place, by their sex."""
+    """Put a social parent in the social mother's or father's place, by their sex (once only)."""
+    if parent_id in (child.socialMotherId, child.socialFatherId):
+        return
     if sex == "F" and not child.socialMotherId:
         child.socialMotherId = parent_id
     elif sex == "M" and not child.socialFatherId:
@@ -190,8 +214,15 @@ def apply_kindred(builder: SessionBuilder, k: Kindred, *, fill_only: bool = Fals
         p.proband = p.proband or m.index
         if aid(m.id) != m.id:
             p.add_note("GA4GH id: {}".format(m.id))
-        included = [_term_token(t) for t in m.terms if not t.excluded]
-        excluded = [_term_token(t) for t in m.terms if t.excluded]
+        # abusua2ga4gh 0.2's carrier term (HP:0032500, "Exacerbated by tobacco use") means a carrier
+        mistaken = [t for t in m.terms if is_carrier_mistake({"id": t.id, "label": t.label})]
+        if mistaken:
+            p.add_condition("carrier")
+            warnings.append("{}: {} labelled as a carrier is abusua2ga4gh 0.2's mistake (it is \"Exacerbated by "
+                            "tobacco use\"); read as being a carrier".format(m.id, mistaken[0].id))
+        terms = [t for t in m.terms if t not in mistaken]
+        included = [_term_token(t) for t in terms if not t.excluded]
+        excluded = [_term_token(t) for t in terms if t.excluded]
         for token in included or excluded:
             p.add_condition(token)
         if included and excluded:
@@ -216,9 +247,14 @@ def apply_kindred(builder: SessionBuilder, k: Kindred, *, fill_only: bool = Fals
                 warnings.append("{}: {} is {}, recorded as the biological {} (Abusua has no field for a "
                                 "donor)".format(m.id, r.individual, kin.TERMS[r.kin].label,
                                                 "father" if r.kin == kin.SPERM_DONOR else "mother"))
-            elif r.kin in _NOT_KEPT:
+            elif r.kin in _NOT_KEPT and r.kin != kin.HAS_GESTATIONAL_CARRIER:
                 warnings.append("{}: {} is {}, which Abusua has no field for".format(
                     m.id, r.individual, _NOT_KEPT[r.kin]))
+        for r in k.relations:
+            # hasGestationalCarrier runs the other way: the child has the carrier
+            if r.kin == kin.HAS_GESTATIONAL_CARRIER and r.individual == m.id:
+                warnings.append("{}: {} is {}, which Abusua has no field for".format(
+                    m.id, r.relative, _NOT_KEPT[r.kin]))
         if mother:
             child.bioMotherId = aid(mother)
         if father:
@@ -233,6 +269,14 @@ def apply_kindred(builder: SessionBuilder, k: Kindred, *, fill_only: bool = Fals
                 child.bioFatherId, child.paternity = aid(recorded), "unknown"
             elif mother:
                 child.paternity = "unknown"
+
+    # social parents whose role the narrative gives go in that place first, whatever their recorded sex
+    for parent, role, child_id in hints["social_parent"]:
+        if parent in known and child_id in known and (parent, child_id) not in social_fathers:
+            child = builder.person(child_id)
+            slot = "socialMotherId" if role == "mother" else "socialFatherId"
+            if not getattr(child, slot):
+                setattr(child, slot, aid(parent))
 
     # social parents, partners, and the relationships Abusua has no place for
     for r in k.relations:
@@ -266,16 +310,9 @@ def apply_kindred(builder: SessionBuilder, k: Kindred, *, fill_only: bool = Fals
                 a, kin.TERMS[r.kin].label if r.kin in kin.TERMS else r.kin, b))
 
     # what the narrative says that the structure cannot
-    for child_id, by in hints["fostered"].items():
+    for child_id in hints["fostered"]:
         if child_id in known:
-            child = builder.person(child_id)
-            child.fosteredIn = True
-            for parent in by:
-                if parent in known and aid(parent) not in (child.socialMotherId, child.socialFatherId):
-                    _slot(child, aid(parent), sex_of.get(parent, "U"))
-    for parent, role, child_id in hints["social_parent"]:
-        if parent in known and child_id in known:
-            _slot(builder.person(child_id), aid(parent), "F" if role == "mother" else "M")
+            builder.person(child_id).fosteredIn = True
     for person in hints["carrier"]:
         if person in known:
             builder.person(person).add_condition("carrier")

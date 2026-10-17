@@ -24,14 +24,20 @@ without any.
   abusua2ga4gh 0.2 wrote all of them.
 - **The narrative is read** for what abusua2ga4gh 0.3 writes there:
   - reported paternity, and a recorded father whose paternity is unknown;
-  - fostering;
+  - social mothers and fathers, with their roles, and fostering;
   - carriers;
   - conditions without an ontology term;
   - who is affected with no condition recorded, and who is unaffected.
 
-  So is what `pedigree-ga4gh upgrade` keeps of an abusua2ga4gh 0.2 file. A
-  session converted to GA4GH and back now comes back as it was, apart from
-  names, and converting it again gives the same files.
+  The notes are read only from abusua2ga4gh's own part of the narrative, and
+  only at the start of a sentence, so what a person writes there is never
+  taken for one. What `pedigree-ga4gh upgrade` keeps of an abusua2ga4gh 0.2
+  file is read as well. A session converted to GA4GH and back keeps its people,
+  parentage, paternity, social parents, fostering, conditions, carriers and
+  unions; it loses only what the README lists (names, notes, layout, the
+  manually set abusua and ntoro, a condition's own wording). Converting the
+  session that comes back gives the same GA4GH files again: the tests check
+  this on 150 random sessions, and it held for 1,000.
 - **Carriers** are no longer read from the phenotypic feature `HP:0032500`.
   That is the HPO's *Exacerbated by tobacco use*, which abusua2ga4gh 0.2 used
   by mistake. They come from the narrative instead.
@@ -49,9 +55,13 @@ without any.
   are now reserved first. Someone renumbered keeps their GA4GH id in their
   notes ("GA4GH id: II-3").
 - **The command takes the file as its argument** (`ga4gh2abusua FILE -o
-  OUT`), whichever kind it is. `--pedigree` and `--family` still work. The
-  session never replaces its input: 0.3 wrote `fam.json` into the current
-  folder for an input named `fam.json`.
+  OUT`), whichever kind it is. `--pedigree` and `--family` still work.
+- **Files are not replaced unasked.** The default output, `<name>.json` in
+  the current folder, may be the very session the GA4GH files were made
+  from, with names and notes the files cannot give back. 0.3 replaced it
+  without a word, and replaced its own input when that was called
+  `fam.json`. 0.4 never replaces its input, and replaces another file only
+  if you name it with `-o` or give the new `--force`.
 - **Names cannot come back.** Phenopackets have no field for a name, and
   abusua2ga4gh 0.3 never writes one. 0.3 restored the names that
   abusua2ga4gh 0.2 put in `subject` against the schema; `pedigree-ga4gh

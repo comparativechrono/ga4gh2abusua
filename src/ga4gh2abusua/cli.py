@@ -47,7 +47,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("input", nargs="?", help="a GA4GH Pedigree or a Phenopackets Family (.json)")
     ap.add_argument("--pedigree", help="a GA4GH Pedigree (version 0.3's option)")
     ap.add_argument("--family", help="a Phenopackets Family (version 0.3's option)")
-    ap.add_argument("-o", "--out", help="the session to write (default: the input's name, in the current folder)")
+    ap.add_argument("-o", "--out", help="the session to write (default: the input's name, in the current folder; "
+                                         "an existing file of that name is not replaced unless you give --force)")
+    ap.add_argument("--force", action="store_true", help="replace the default output file if it already exists")
     ap.add_argument("--stdout", action="store_true", help="print the session instead of writing a file")
     ap.add_argument("--family-id", default=None, help="the family id to give the session")
     ap.add_argument("--indent", type=int, default=2, help="JSON indent (default: 2)")
@@ -98,9 +100,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     out = pathlib.Path(args.out) if args.out else default_output(pedigree_path or family_path)
     inputs = {pathlib.Path(p).resolve() for p in (pedigree_path, family_path) if p}
     if out.resolve() in inputs:
-        out = out.with_name(out.name[: -len(".json")] + ".abusua.json")
-        print("ga4gh2abusua: the session would have replaced the input, so it is written to {}".format(out),
+        print("ga4gh2abusua: {} is the file being read; give the session another name with -o".format(out),
               file=sys.stderr)
+        return 2
+    if not args.out and out.exists() and not args.force:
+        # the default name is the session's own (asante.json for asante.ga4gh-pedigree.json), which may well be
+        # the session these files came from, with its names and notes: never replace it unasked
+        print("ga4gh2abusua: {} already exists (it may be the session the file came from); give -o to choose "
+              "another name, or --force to replace it".format(out), file=sys.stderr)
+        return 2
     if out.parent and not out.parent.exists():
         out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")

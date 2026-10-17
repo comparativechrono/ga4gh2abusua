@@ -1,6 +1,6 @@
 {
   "id": "ADJEI",
-  "narrative": "Pedigree from Abusua Pedigree Studio: 8 people; proband i4. Conditions: Breast and ovarian cancer, breast cancer. i5's biological father, i1, is reported, not confirmed. i3 has Breast and ovarian cancer, which has no ontology term yet. Recorded as unaffected: i1, i5, i6 and i7.",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 8 people; proband i4. Conditions: Breast and ovarian cancer, breast cancer. i5's biological father, i1, is reported, not confirmed. i3 has \"Breast and ovarian cancer\", which has no ontology term yet. Recorded as unaffected: i1, i5, i6 and i7.",
   "date": "2026-10-17",
   "indexPatients": [
     "i4"
