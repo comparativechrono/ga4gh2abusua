@@ -1,0 +1,188 @@
+{
+  "id": "ADJEI",
+  "proband": {
+    "id": "ADJEI-i4",
+    "subject": {
+      "id": "i4",
+      "vitalStatus": {
+        "status": "ALIVE"
+      },
+      "sex": "FEMALE"
+    },
+    "diseases": [
+      {
+        "term": {
+          "id": "MONDO:0007254",
+          "label": "breast cancer"
+        }
+      }
+    ],
+    "metaData": {
+      "created": "2026-10-17T12:00:00Z",
+      "createdBy": "abusua2ga4gh 0.3.0",
+      "resources": [
+        {
+          "id": "mondo",
+          "name": "Mondo Disease Ontology",
+          "url": "http://purl.obolibrary.org/obo/mondo.obo",
+          "version": "2026-10-06",
+          "namespacePrefix": "MONDO",
+          "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+        }
+      ],
+      "phenopacketSchemaVersion": "2.0"
+    }
+  },
+  "relatives": [
+    {
+      "id": "ADJEI-i2",
+      "subject": {
+        "id": "i2",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "FEMALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007254",
+            "label": "breast cancer"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ADJEI-i8",
+      "subject": {
+        "id": "i8",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007254",
+            "label": "breast cancer"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "consanguinousParents": false,
+  "pedigree": {
+    "persons": [
+      {
+        "familyId": "ADJEI",
+        "individualId": "i1",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i2",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i3",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "FEMALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i4",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "FEMALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i5",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i6",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i7",
+        "paternalId": "i6",
+        "maternalId": "i4",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ADJEI",
+        "individualId": "i8",
+        "paternalId": "i6",
+        "maternalId": "i4",
+        "sex": "FEMALE",
+        "affectedStatus": "AFFECTED"
+      }
+    ]
+  },
+  "metaData": {
+    "created": "2026-10-17T12:00:00Z",
+    "createdBy": "abusua2ga4gh 0.3.0",
+    "resources": [
+      {
+        "id": "mondo",
+        "name": "Mondo Disease Ontology",
+        "url": "http://purl.obolibrary.org/obo/mondo.obo",
+        "version": "2026-10-06",
+        "namespacePrefix": "MONDO",
+        "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+      }
+    ],
+    "phenopacketSchemaVersion": "2.0"
+  }
+}

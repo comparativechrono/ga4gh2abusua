@@ -1,0 +1,179 @@
+{
+  "id": "OWUSU",
+  "proband": {
+    "id": "OWUSU-i9",
+    "subject": {
+      "id": "i9",
+      "vitalStatus": {
+        "status": "ALIVE"
+      },
+      "sex": "MALE"
+    },
+    "diseases": [
+      {
+        "term": {
+          "id": "MONDO:0018910",
+          "label": "oculocutaneous albinism"
+        }
+      }
+    ],
+    "metaData": {
+      "created": "2026-10-17T12:00:00Z",
+      "createdBy": "abusua2ga4gh 0.3.0",
+      "resources": [
+        {
+          "id": "mondo",
+          "name": "Mondo Disease Ontology",
+          "url": "http://purl.obolibrary.org/obo/mondo.obo",
+          "version": "2026-10-06",
+          "namespacePrefix": "MONDO",
+          "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+        }
+      ],
+      "phenopacketSchemaVersion": "2.0"
+    }
+  },
+  "relatives": [
+    {
+      "id": "OWUSU-i11",
+      "subject": {
+        "id": "i11",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0018910",
+            "label": "oculocutaneous albinism"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "consanguinousParents": true,
+  "pedigree": {
+    "persons": [
+      {
+        "familyId": "OWUSU",
+        "individualId": "i1",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "MISSING"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i2",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "MISSING"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i3",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i4",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i5",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i6",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i7",
+        "paternalId": "i3",
+        "maternalId": "i5",
+        "sex": "MALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i8",
+        "paternalId": "i6",
+        "maternalId": "i4",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i9",
+        "paternalId": "i7",
+        "maternalId": "i8",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i10",
+        "paternalId": "i7",
+        "maternalId": "i8",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "OWUSU",
+        "individualId": "i11",
+        "paternalId": "i7",
+        "maternalId": "i8",
+        "sex": "FEMALE",
+        "affectedStatus": "AFFECTED"
+      }
+    ]
+  },
+  "metaData": {
+    "created": "2026-10-17T12:00:00Z",
+    "createdBy": "abusua2ga4gh 0.3.0",
+    "resources": [
+      {
+        "id": "mondo",
+        "name": "Mondo Disease Ontology",
+        "url": "http://purl.obolibrary.org/obo/mondo.obo",
+        "version": "2026-10-06",
+        "namespacePrefix": "MONDO",
+        "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+      }
+    ],
+    "phenopacketSchemaVersion": "2.0"
+  }
+}

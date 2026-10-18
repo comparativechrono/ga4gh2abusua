@@ -1,0 +1,176 @@
+{
+  "id": "ASANTE",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 6 people; proband i3. Conditions: Night blindness, sickle cell disease. i3's biological father, i1, is reported, not confirmed. i1 is the social father of i5, not the biological father. i6 was fostered in. i2 is the social mother of i6. i2 is a carrier. i5 has \"Night blindness\", which has no ontology term yet. Recorded as unaffected: i2 and i4.",
+  "date": "2026-10-17",
+  "indexPatients": [
+    "i3"
+  ],
+  "individuals": [
+    {
+      "id": "ASANTE-i1",
+      "subject": {
+        "id": "i1",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ASANTE-i2",
+      "subject": {
+        "id": "i2",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ASANTE-i3",
+      "subject": {
+        "id": "i3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0011382",
+            "label": "sickle cell disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ASANTE-i4",
+      "subject": {
+        "id": "i4",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ASANTE-i5",
+      "subject": {
+        "id": "i5",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "ASANTE-i6",
+      "subject": {
+        "id": "i6",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i5"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:020",
+        "label": "isParentFigureOf"
+      },
+      "relativeId": "i5"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:021",
+        "label": "isFosterParentOf"
+      },
+      "relativeId": "i6"
+    }
+  ]
+}

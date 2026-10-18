@@ -1,0 +1,174 @@
+{
+  "id": "ASANTE",
+  "individuals": [
+    {
+      "id": "1",
+      "subject": {
+        "id": "i1",
+        "sex": "MALE",
+        "vitalStatus": {
+          "status": "DECEASED"
+        }
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "2",
+      "subject": {
+        "id": "i2",
+        "sex": "FEMALE",
+        "vitalStatus": {
+          "status": "ALIVE"
+        }
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "3",
+      "subject": {
+        "id": "i3",
+        "sex": "MALE",
+        "vitalStatus": {
+          "status": "ALIVE"
+        }
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "",
+            "label": "Sickle cell anaemia (HbSS)"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "4",
+      "subject": {
+        "id": "i4",
+        "sex": "FEMALE",
+        "vitalStatus": {
+          "status": "ALIVE"
+        }
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "5",
+      "subject": {
+        "id": "i5",
+        "sex": "MALE",
+        "vitalStatus": {
+          "status": "ALIVE"
+        }
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "",
+            "label": "Night blindness"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "6",
+      "subject": {
+        "id": "i6",
+        "sex": "FEMALE",
+        "vitalStatus": {
+          "status": "ALIVE"
+        }
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "pedigree-ga4gh upgrade",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i5"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:022",
+        "label": "isAdoptiveParentOf"
+      },
+      "relativeId": "i5"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:022",
+        "label": "isAdoptiveParentOf"
+      },
+      "relativeId": "i6"
+    }
+  ],
+  "indexPatients": [
+    "i3"
+  ],
+  "narrative": "Asante family. i1 and i3: paternity reported, not confirmed. i1 and i5: social/levirate father (non-biological). i2 and i6: social/foster parent (child fostered in).",
+  "date": "2026-10-17"
+}

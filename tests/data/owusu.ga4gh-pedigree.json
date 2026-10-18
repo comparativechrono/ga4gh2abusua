@@ -1,0 +1,333 @@
+{
+  "id": "OWUSU",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 11 people; proband i9. Conditions: oculocutaneous albinism. i7 is a carrier. i8 is a carrier. Recorded as unaffected: i3, i4, i5, i6, i7, i8 and i10.",
+  "date": "2026-10-17",
+  "indexPatients": [
+    "i9"
+  ],
+  "individuals": [
+    {
+      "id": "OWUSU-i1",
+      "subject": {
+        "id": "i1",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i2",
+      "subject": {
+        "id": "i2",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i3",
+      "subject": {
+        "id": "i3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i4",
+      "subject": {
+        "id": "i4",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i5",
+      "subject": {
+        "id": "i5",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i6",
+      "subject": {
+        "id": "i6",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i7",
+      "subject": {
+        "id": "i7",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i8",
+      "subject": {
+        "id": "i8",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i9",
+      "subject": {
+        "id": "i9",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0018910",
+            "label": "oculocutaneous albinism"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i10",
+      "subject": {
+        "id": "i10",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "OWUSU-i11",
+      "subject": {
+        "id": "i11",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0018910",
+            "label": "oculocutaneous albinism"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i3",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i6",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i8",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i9"
+    },
+    {
+      "individualId": "i7",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i9"
+    },
+    {
+      "individualId": "i8",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i10"
+    },
+    {
+      "individualId": "i7",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i10"
+    },
+    {
+      "individualId": "i8",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i11"
+    },
+    {
+      "individualId": "i7",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i11"
+    },
+    {
+      "individualId": "i7",
+      "relation": {
+        "id": "KIN:030",
+        "label": "isConsanguineousPartnerOf"
+      },
+      "relativeId": "i8"
+    }
+  ]
+}

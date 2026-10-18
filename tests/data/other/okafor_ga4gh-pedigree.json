@@ -1,0 +1,511 @@
+{
+  "id": "FAM1",
+  "narrative": "Pedigree drawn in Pedigree Studio: 16 people; proband IV-3. Conditions: Hearing impairment, breast cancer. IV-2 is a pregnancy loss. IV-5 is a pregnancy.",
+  "date": "2026-10-17",
+  "indexPatients": [
+    "IV-3"
+  ],
+  "individuals": [
+    {
+      "id": "FAM1-I-1",
+      "subject": {
+        "id": "I-1",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-I-2",
+      "subject": {
+        "id": "I-2",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-II-1",
+      "subject": {
+        "id": "II-1",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-II-2",
+      "subject": {
+        "id": "II-2",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-II-3",
+      "subject": {
+        "id": "II-3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007254",
+            "label": "breast cancer"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-II-4",
+      "subject": {
+        "id": "II-4",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-III-1",
+      "subject": {
+        "id": "III-1",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-III-2",
+      "subject": {
+        "id": "III-2",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-III-3",
+      "subject": {
+        "id": "III-3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-III-4",
+      "subject": {
+        "id": "III-4",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-III-5",
+      "subject": {
+        "id": "III-5",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-IV-1",
+      "subject": {
+        "id": "IV-1",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-IV-2",
+      "subject": {
+        "id": "IV-2",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "UNKNOWN_SEX"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-IV-3",
+      "subject": {
+        "id": "IV-3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "phenotypicFeatures": [
+        {
+          "type": {
+            "id": "HP:0000365",
+            "label": "Hearing impairment"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "resources": [
+          {
+            "id": "hp",
+            "name": "human phenotype ontology",
+            "url": "http://purl.obolibrary.org/obo/hp.owl",
+            "version": "2026-09-01",
+            "namespacePrefix": "HP",
+            "iriPrefix": "http://purl.obolibrary.org/obo/HP_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-IV-4",
+      "subject": {
+        "id": "IV-4",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "phenotypicFeatures": [
+        {
+          "type": {
+            "id": "HP:0000365",
+            "label": "Hearing impairment"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "resources": [
+          {
+            "id": "hp",
+            "name": "human phenotype ontology",
+            "url": "http://purl.obolibrary.org/obo/hp.owl",
+            "version": "2026-09-01",
+            "namespacePrefix": "HP",
+            "iriPrefix": "http://purl.obolibrary.org/obo/HP_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "FAM1-IV-5",
+      "subject": {
+        "id": "IV-5",
+        "sex": "UNKNOWN_SEX"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "studio2ga4gh 0.4.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "I-1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "II-2"
+    },
+    {
+      "individualId": "I-2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "II-2"
+    },
+    {
+      "individualId": "I-1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "II-3"
+    },
+    {
+      "individualId": "I-2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "II-3"
+    },
+    {
+      "individualId": "II-1",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "III-1"
+    },
+    {
+      "individualId": "II-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "III-1"
+    },
+    {
+      "individualId": "II-1",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "III-2"
+    },
+    {
+      "individualId": "II-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "III-2"
+    },
+    {
+      "individualId": "II-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "III-3"
+    },
+    {
+      "individualId": "II-4",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "III-3"
+    },
+    {
+      "individualId": "II-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "III-4"
+    },
+    {
+      "individualId": "II-4",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "III-4"
+    },
+    {
+      "individualId": "II-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "III-5"
+    },
+    {
+      "individualId": "II-4",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "III-5"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "IV-1"
+    },
+    {
+      "individualId": "III-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "IV-1"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "IV-2"
+    },
+    {
+      "individualId": "III-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "IV-2"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "IV-3"
+    },
+    {
+      "individualId": "III-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "IV-3"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "IV-4"
+    },
+    {
+      "individualId": "III-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "IV-4"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "IV-5"
+    },
+    {
+      "individualId": "III-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "IV-5"
+    },
+    {
+      "individualId": "III-2",
+      "relation": {
+        "id": "KIN:030",
+        "label": "isConsanguineousPartnerOf"
+      },
+      "relativeId": "III-3"
+    },
+    {
+      "individualId": "IV-3",
+      "relation": {
+        "id": "KIN:010",
+        "label": "isMonozygoticMultipleBirthSiblingOf"
+      },
+      "relativeId": "IV-4"
+    }
+  ]
+}

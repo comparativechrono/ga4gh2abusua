@@ -1,0 +1,171 @@
+{
+  "id": "ASANTE",
+  "proband": {
+    "id": "ASANTE-i3",
+    "subject": {
+      "id": "i3",
+      "sex": "MALE",
+      "vital_status": {
+        "status": "ALIVE"
+      }
+    },
+    "diseases": [
+      {
+        "term": {
+          "id": "MONDO:0011382",
+          "label": "Sickle cell anaemia (HbSS)"
+        }
+      }
+    ],
+    "metaData": {
+      "created": "2026-06-01T12:00:00Z",
+      "createdBy": "abusua2ga4gh",
+      "phenopacketSchemaVersion": "2.0",
+      "resources": [
+        {
+          "id": "mondo",
+          "name": "Mondo Disease Ontology",
+          "url": "http://purl.obolibrary.org/obo/mondo.obo",
+          "version": "",
+          "namespacePrefix": "MONDO",
+          "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+        }
+      ]
+    }
+  },
+  "relatives": [
+    {
+      "id": "ASANTE-i2",
+      "subject": {
+        "id": "i2",
+        "sex": "FEMALE",
+        "vital_status": {
+          "status": "ALIVE"
+        }
+      },
+      "phenotypicFeatures": [
+        {
+          "type": {
+            "id": "HP:0032500",
+            "label": "Heterozygous carrier"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-06-01T12:00:00Z",
+        "createdBy": "abusua2ga4gh",
+        "phenopacketSchemaVersion": "2.0",
+        "resources": [
+          {
+            "id": "hp",
+            "name": "Human Phenotype Ontology",
+            "url": "http://purl.obolibrary.org/obo/hp.obo",
+            "version": "",
+            "namespacePrefix": "HP",
+            "iriPrefix": "http://purl.obolibrary.org/obo/HP_"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ASANTE-i5",
+      "subject": {
+        "id": "i5",
+        "sex": "MALE",
+        "vital_status": {
+          "status": "ALIVE"
+        }
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "",
+            "label": "Night blindness"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-06-01T12:00:00Z",
+        "createdBy": "abusua2ga4gh",
+        "phenopacketSchemaVersion": "2.0",
+        "resources": []
+      }
+    }
+  ],
+  "consanguinousParents": false,
+  "pedigree": {
+    "persons": [
+      {
+        "familyId": "ASANTE",
+        "individualId": "i1",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "MALE",
+        "affectedStatus": "MISSING"
+      },
+      {
+        "familyId": "ASANTE",
+        "individualId": "i2",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ASANTE",
+        "individualId": "i3",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "ASANTE",
+        "individualId": "i4",
+        "paternalId": "i1",
+        "maternalId": "i2",
+        "sex": "FEMALE",
+        "affectedStatus": "UNAFFECTED"
+      },
+      {
+        "familyId": "ASANTE",
+        "individualId": "i5",
+        "paternalId": "0",
+        "maternalId": "i2",
+        "sex": "MALE",
+        "affectedStatus": "AFFECTED"
+      },
+      {
+        "familyId": "ASANTE",
+        "individualId": "i6",
+        "paternalId": "0",
+        "maternalId": "0",
+        "sex": "FEMALE",
+        "affectedStatus": "MISSING"
+      }
+    ]
+  },
+  "metaData": {
+    "created": "2026-06-01T12:00:00Z",
+    "createdBy": "abusua2ga4gh",
+    "phenopacketSchemaVersion": "2.0",
+    "resources": [
+      {
+        "id": "mondo",
+        "name": "Mondo Disease Ontology",
+        "url": "http://purl.obolibrary.org/obo/mondo.obo",
+        "version": "",
+        "namespacePrefix": "MONDO",
+        "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+      },
+      {
+        "id": "hp",
+        "name": "Human Phenotype Ontology",
+        "url": "http://purl.obolibrary.org/obo/hp.obo",
+        "version": "",
+        "namespacePrefix": "HP",
+        "iriPrefix": "http://purl.obolibrary.org/obo/HP_"
+      }
+    ]
+  }
+}

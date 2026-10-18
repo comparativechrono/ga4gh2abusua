@@ -1,0 +1,284 @@
+{
+  "id": "FAM1",
+  "individuals": [
+    {
+      "id": "ind-1",
+      "sex": "FEMALE"
+    },
+    {
+      "id": "ind-2",
+      "sex": "FEMALE",
+      "deceased": true
+    },
+    {
+      "id": "ind-3",
+      "sex": "FEMALE"
+    },
+    {
+      "id": "ind-4",
+      "sex": "MALE"
+    },
+    {
+      "id": "ind-5",
+      "sex": "MALE",
+      "affected": true
+    },
+    {
+      "id": "ind-6",
+      "sex": "FEMALE",
+      "deceased": true
+    },
+    {
+      "id": "ind-7",
+      "sex": "MALE",
+      "affected": true
+    },
+    {
+      "id": "ind-8",
+      "sex": "MALE",
+      "deceased": true
+    },
+    {
+      "id": "ind-9",
+      "sex": "FEMALE",
+      "affected": true
+    },
+    {
+      "id": "ind-10",
+      "sex": "MALE"
+    },
+    {
+      "id": "ind-11",
+      "sex": "UNKNOWN_SEX"
+    },
+    {
+      "id": "ind-12",
+      "sex": "FEMALE"
+    },
+    {
+      "id": "ind-13",
+      "sex": "MALE",
+      "deceased": true
+    },
+    {
+      "id": "ind-14",
+      "sex": "MALE"
+    },
+    {
+      "id": "ind-15",
+      "sex": "UNKNOWN_SEX"
+    },
+    {
+      "id": "ind-16",
+      "sex": "MALE",
+      "deceased": true
+    }
+  ],
+  "relationships": [
+    {
+      "individual": "ind-2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-8"
+    },
+    {
+      "individual": "ind-13",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-8"
+    },
+    {
+      "individual": "ind-2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-9"
+    },
+    {
+      "individual": "ind-13",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-9"
+    },
+    {
+      "individual": "ind-12",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-10"
+    },
+    {
+      "individual": "ind-8",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-10"
+    },
+    {
+      "individual": "ind-12",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-14"
+    },
+    {
+      "individual": "ind-8",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-14"
+    },
+    {
+      "individual": "ind-9",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-3"
+    },
+    {
+      "individual": "ind-16",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-3"
+    },
+    {
+      "individual": "ind-9",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-6"
+    },
+    {
+      "individual": "ind-16",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-6"
+    },
+    {
+      "individual": "ind-9",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-4"
+    },
+    {
+      "individual": "ind-16",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-4"
+    },
+    {
+      "individual": "ind-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-1"
+    },
+    {
+      "individual": "ind-14",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-1"
+    },
+    {
+      "individual": "ind-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-11"
+    },
+    {
+      "individual": "ind-14",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-11"
+    },
+    {
+      "individual": "ind-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-5"
+    },
+    {
+      "individual": "ind-14",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-5"
+    },
+    {
+      "individual": "ind-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-7"
+    },
+    {
+      "individual": "ind-14",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-7"
+    },
+    {
+      "individual": "ind-3",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relative": "ind-15"
+    },
+    {
+      "individual": "ind-14",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relative": "ind-15"
+    },
+    {
+      "individual": "ind-5",
+      "relation": {
+        "id": "KIN:010",
+        "label": "isMonozygoticMultipleBirthSiblingOf"
+      },
+      "relative": "ind-7"
+    }
+  ],
+  "date": "2026-10-17",
+  "indexPatients": [
+    "ind-5"
+  ],
+  "narrative": "GA4GH Pedigree with 16 individuals. Conditions tracked: Hearing loss from birth, Breast cancer."
+}

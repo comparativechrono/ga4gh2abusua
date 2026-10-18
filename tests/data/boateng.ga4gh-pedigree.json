@@ -1,0 +1,304 @@
+{
+  "id": "BOATENG",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 10 people; proband i3. Conditions: Huntington disease, Hypertension. i8's father is recorded as i9, but it is not known whether he is the biological father. i9 has \"Hypertension\", which has no ontology term yet. Recorded as unaffected: i2, i4, i5, i7 and i10.",
+  "date": "2026-10-17",
+  "indexPatients": [
+    "i3"
+  ],
+  "individuals": [
+    {
+      "id": "BOATENG-i1",
+      "subject": {
+        "id": "i1",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007739",
+            "label": "Huntington disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i2",
+      "subject": {
+        "id": "i2",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i3",
+      "subject": {
+        "id": "i3",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007739",
+            "label": "Huntington disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i4",
+      "subject": {
+        "id": "i4",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i5",
+      "subject": {
+        "id": "i5",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i6",
+      "subject": {
+        "id": "i6",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0007739",
+            "label": "Huntington disease"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i7",
+      "subject": {
+        "id": "i7",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i8",
+      "subject": {
+        "id": "i8",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i9",
+      "subject": {
+        "id": "i9",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "BOATENG-i10",
+      "subject": {
+        "id": "i10",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i6"
+    },
+    {
+      "individualId": "i3",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i6"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i3",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:026",
+        "label": "isPartnerOf"
+      },
+      "relativeId": "i9"
+    },
+    {
+      "individualId": "i7",
+      "relation": {
+        "id": "KIN:026",
+        "label": "isPartnerOf"
+      },
+      "relativeId": "i10"
+    }
+  ]
+}

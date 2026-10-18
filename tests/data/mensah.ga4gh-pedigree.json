@@ -1,0 +1,318 @@
+{
+  "id": "MENSAH",
+  "narrative": "Pedigree from Abusua Pedigree Studio: 10 people; proband i6. Conditions: Duchenne muscular dystrophy. i9 is the social mother of i8. i2 is a carrier. i4 is a carrier. i10 is affected, but no condition is recorded. Recorded as unaffected: i1, i2, i4, i5, i7 and i9.",
+  "date": "2026-10-17",
+  "indexPatients": [
+    "i6"
+  ],
+  "individuals": [
+    {
+      "id": "MENSAH-i1",
+      "subject": {
+        "id": "i1",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i2",
+      "subject": {
+        "id": "i2",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i3",
+      "subject": {
+        "id": "i3",
+        "vitalStatus": {
+          "status": "DECEASED"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0010679",
+            "label": "Duchenne muscular dystrophy"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i4",
+      "subject": {
+        "id": "i4",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i5",
+      "subject": {
+        "id": "i5",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i6",
+      "subject": {
+        "id": "i6",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "diseases": [
+        {
+          "term": {
+            "id": "MONDO:0010679",
+            "label": "Duchenne muscular dystrophy"
+          }
+        }
+      ],
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "resources": [
+          {
+            "id": "mondo",
+            "name": "Mondo Disease Ontology",
+            "url": "http://purl.obolibrary.org/obo/mondo.obo",
+            "version": "2026-10-06",
+            "namespacePrefix": "MONDO",
+            "iriPrefix": "http://purl.obolibrary.org/obo/MONDO_"
+          }
+        ],
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i7",
+      "subject": {
+        "id": "i7",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "MALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i8",
+      "subject": {
+        "id": "i8",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i9",
+      "subject": {
+        "id": "i9",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "FEMALE"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    },
+    {
+      "id": "MENSAH-i10",
+      "subject": {
+        "id": "i10",
+        "vitalStatus": {
+          "status": "ALIVE"
+        },
+        "sex": "UNKNOWN_SEX"
+      },
+      "metaData": {
+        "created": "2026-10-17T12:00:00Z",
+        "createdBy": "abusua2ga4gh 0.3.0",
+        "phenopacketSchemaVersion": "2.0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i3"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i4"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i6"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i6"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i7"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i9",
+      "relation": {
+        "id": "KIN:020",
+        "label": "isParentFigureOf"
+      },
+      "relativeId": "i8"
+    },
+    {
+      "individualId": "i2",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i9"
+    },
+    {
+      "individualId": "i1",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i9"
+    },
+    {
+      "individualId": "i4",
+      "relation": {
+        "id": "KIN:027",
+        "label": "isBiologicalMotherOf"
+      },
+      "relativeId": "i10"
+    },
+    {
+      "individualId": "i5",
+      "relation": {
+        "id": "KIN:028",
+        "label": "isBiologicalFatherOf"
+      },
+      "relativeId": "i10"
+    }
+  ]
+}
